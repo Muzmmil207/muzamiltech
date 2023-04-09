@@ -2,3 +2,4 @@ dj-database-url
 Django
 whitenoise
 gunicorn
+psycopg2

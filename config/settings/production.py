@@ -1,7 +1,8 @@
-from .base import *
 import dj_database_url
 
-if not DEBUG:
+from .base import *
+
+if  DEBUG:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
     DATABASES = {

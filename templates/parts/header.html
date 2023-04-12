@@ -31,17 +31,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="category.html">Category</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a target="_blank" class="nav-link highlight"
-                        href="https://gum.co/affiliates-html-template">Download</a>
-                </li>
                 {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a target="_blank" class="nav-link highlight" href="#"></a>
+                </li>
             </ul>
             <!-- End Menu -->
         </div>

@@ -23,11 +23,11 @@
                 <div class="footer-widget">
                     <h5 class="title">Author</h5>
                     <ul>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
                         <li><a target="_blank" href="#">Affiliates</a>
                         </li>
                         <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                 <div class="footer-widget textwidget">
                     <h5 class="title">Muztech</h5>
                     <p>
-                        <a href="/contact">contact us here</a>.
+                        <a href="{% url 'contact' %}">contact us here</a>.
                     </p>
                 </div>
             </div>

@@ -138,5 +138,5 @@ cython_debug/
 static_root
 media_root
 
-doc.txt
-search
+*.json
+affiliates

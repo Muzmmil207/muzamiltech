@@ -21,12 +21,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "django.contrib.flatpages",
     # LOCAL_APPS
     "apps.users",
     "apps.base",
-    # "apps.phone",
+    "apps.articles",
     # THIRD_PARTY_APPS
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -113,3 +117,6 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Articles APIs
+NEWSDATA_API_KEY = "pub_2014607f2e3972fa2475d0757936e8666bb78"

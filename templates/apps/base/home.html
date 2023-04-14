@@ -170,28 +170,20 @@
                     <h2><span>All Stories</span></h2>
                 </div>
                 <div class="masonrygrid row listrecent">
-                    {% if 1 == 2 %}
+                    {% for article in articles %}
                     <!-- begin post -->
                     <div class="col-md-6 grid-item">
                         <div class="card">
-                            <a href="#">
-                                <img class="img-fluid" src="{% static 'assets/images/2.jpg' %}" alt="Tree of Codes">
+                            <a href="{% url 'article' article.slug %}">
+                                <img class="img-fluid" src="{{article.image_url}}" width="390px" alt="Tree of Codes">
                             </a>
                             <div class="card-block">
-                                <h2 class="card-title"><a href="#">Tree of Codes</a></h2>
-                                <h4 class="card-text">The first mass-produced book to deviate from a rectilinear
-                                    format, at least in the United States, is thought to be this 1863 edition of
-                                    Red Riding Hood, cut into the...</h4>
+                                <h2 class="card-title"><a href="#">{{article.title}}</a></h2>
+                                <h4 class="card-text">{{article.description|slice:':190'}}..</h4>
                                 <div class="metafooter">
                                     <div class="wrapfooter">
-                                        <span class="meta-footer-thumb">
-                                            <img class="author-thumb"
-                                                src="https://www.gravatar.com/avatar/e56154546cf4be74e393c62d1ae9f9d4?s=250&d=mm&r=x"
-                                                alt="Sal">
-                                        </span>
                                         <span class="author-meta">
-                                            <span class="post-name"><a target="_blank" href="#">Sal</a></span><br />
-                                            <span class="post-date">12 Jan 2018</span>
+                                            <span class="post-date">{{article.published_at}}</span>
                                         </span>
                                         <span class="post-read-more"><a href="#" title="Read Story"><i
                                                     class="fa fa-link"></i></a></span>
@@ -203,104 +195,7 @@
                         </div>
                     </div>
                     <!-- end post -->
-                    <!-- begin post -->
-                    <div class="col-md-6 grid-item">
-                        <div class="card">
-                            <a href="#">
-                                <img class="img-fluid" src="{% static 'assets/images/3.jpg' %}" alt="Red Riding Hood">
-                            </a>
-                            <div class="card-block">
-                                <h2 class="card-title"><a href="#">Red Riding Hood</a></h2>
-                                <h4 class="card-text">The first mass-produced book to deviate from a rectilinear
-                                    format, at least in the United States, is thought to be this 1863 edition of
-                                    Red Riding Hood, cut into the...</h4>
-                                <div class="metafooter">
-                                    <div class="wrapfooter">
-                                        <span class="meta-footer-thumb">
-                                            <img class="author-thumb"
-                                                src="https://www.gravatar.com/avatar/e56154546cf4be74e393c62d1ae9f9d4?s=250&d=mm&r=x"
-                                                alt="Sal">
-                                        </span>
-                                        <span class="author-meta">
-                                            <span class="post-name"><a target="_blank" href="#">Sal</a></span><br />
-                                            <span class="post-date">12 Jan 2018</span>
-                                        </span>
-                                        <span class="post-read-more"><a href="#" title="Read Story"><i
-                                                    class="fa fa-link"></i></a></span>
-                                        <div class="clearfix">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end post -->
-                    <!-- begin post -->
-                    <div class="col-md-6 grid-item">
-                        <div class="card">
-                            <a href="#">
-                                <img class="img-fluid" src="{% static 'assets/images/5.jpg' %}"
-                                    alt="Is Intelligence Enough">
-                            </a>
-                            <div class="card-block">
-                                <h2 class="card-title"><a href="#">Is Intelligence Enough</a></h2>
-                                <h4 class="card-text">Education must also train one for quick, resolute and
-                                    effective thinking. To think incisively and to think for one’s self is very
-                                    difficult. </h4>
-                                <div class="metafooter">
-                                    <div class="wrapfooter">
-                                        <span class="meta-footer-thumb">
-                                            <img class="author-thumb"
-                                                src="https://www.gravatar.com/avatar/e56154546cf4be74e393c62d1ae9f9d4?s=250&d=mm&r=x"
-                                                alt="Sal">
-                                        </span>
-                                        <span class="author-meta">
-                                            <span class="post-name"><a target="_blank" href="#">Sal</a></span><br />
-                                            <span class="post-date">12 Jan 2018</span>
-                                        </span>
-                                        <span class="post-read-more"><a href="#" title="Read Story"><i
-                                                    class="fa fa-link"></i></a></span>
-                                        <div class="clearfix">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end post -->
-                    <!-- begin post -->
-                    <div class="col-md-6 grid-item">
-                        <div class="card">
-                            <a href="#">
-                                <img class="img-fluid" src="{% static 'assets/images/6.jpg' %}" alt="Markdown Example">
-                            </a>
-                            <div class="card-block">
-                                <h2 class="card-title"><a href="#">Markdown Example</a></h2>
-                                <h4 class="card-text">You’ll find this post in your _posts directory. Go ahead
-                                    and edit it and re-build the site to see your changes. You can rebuild the
-                                    site in many different ways,...</h4>
-                                <div class="metafooter">
-                                    <div class="wrapfooter">
-                                        <span class="meta-footer-thumb">
-                                            <img class="author-thumb"
-                                                src="https://www.gravatar.com/avatar/b1cc14991db7a456fcd761680bbc8f81?s=250&d=mm&r=x"
-                                                alt="John">
-                                        </span>
-                                        <span class="author-meta">
-                                            <span class="post-name"><a target="_blank" href="#">John</a></span><br />
-                                            <span class="post-date">11 Jan 2018</span>
-                                        </span>
-                                        <span class="post-read-more"><a href="#" title="Read Story"><i
-                                                    class="fa fa-link"></i></a></span>
-                                        <div class="clearfix">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end post -->
-                    {% endif %}
+                    {% endfor %}
                 </div>
                 <!-- Pagination -->
                 <div class="bottompagination">
@@ -315,4 +210,28 @@
     </div>
 </div>
 <!-- /.container -->
+<!-- Before Footer
+    ================================================== -->
+<div class="beforefooter">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h3>This is your final call to action area. Shine like a star, make them want you, tell 'em to
+                    push that button!</h3>
+                <p>
+                    We offer a <span>30 Day Money Back Guarantee</span>, so joining is Risk-Free!
+                </p>
+                <a class="btn btn-primary btn-lg" href="#">Join us yesterday</a>
+            </div>
+            <div class="col-md-4 text-right footersocial">
+                <h5>Connect with Us</h5>
+                <i class="fa fa-facebook"></i>
+                <i class="fa fa-twitter"></i>
+                <i class="fa fa-google"></i>
+                <i class="fa fa-pinterest"></i>
+                <i class="fa fa-github"></i>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

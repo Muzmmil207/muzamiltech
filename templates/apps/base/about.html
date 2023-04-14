@@ -1,5 +1,6 @@
 {% extends 'index.html' %}
 {% load static %}
+{% block title %}{{ flatpage.title }}{% endblock %}
 {% block content %}
 <div class="container">
 	<!-- Content
@@ -7,22 +8,10 @@
 	<div class="main-content">
 		<section>
 			<div class="section-title">
-				<h2><span>About</span></h2>
+				<h2><span>About Us</span></h2>
 			</div>
 			<div class="article-post">
-				<p>
-					This website is built with “Affiliates” (a free Bootstrap Template designed &amp; developed
-					by WowThemes.net). It is meant for demonstration purposes, so you can have an idea of how
-					this theme looks in action so no real content can be found. This page in example shows a
-					page layout.
-				</p>
-				<p>
-					<strong>License &amp; Download</strong>
-				</p>
-				<p>
-					Affiliates HTML Bootstrap template is designed and developed by WowThemes.net and it is
-					<em>free</em> for personal use.
-				</p>
+				{{ flatpage.content }}
 			</div>
 			<div id="comments" class="row mb-5">
 				<div class="col-md-8">

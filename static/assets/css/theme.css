@@ -436,9 +436,9 @@ span.post-read-more a:hover {
 }
 
 .wrapintro {
-    background: #fff;
+    background: #00000070;
     width: 700px;
-    padding: 3rem;
+    padding: 1rem;
     max-width: 90%;
     margin: 0px auto;
     text-align: center;

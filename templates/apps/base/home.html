@@ -5,9 +5,18 @@
     ================================================== -->
 <section class="intro">
     <div class="wrapintro">
-        <h1>Affiliates </h1>
-        <h2 class="lead">"Affiliates".</h2>
-        <a target="_blank" href="#" class="btn">Start</a>
+        <h1></h1>
+        <form action="" method="post" class="form-group">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <input class="form-control" type="text" name="" placeholder="Search">
+                </div>
+                <div class="col-md-2">
+                    <input class="btn" type="submit">
+                </div>
+            </div>
+        </form>
     </div>
 </section>
 <!-- Container

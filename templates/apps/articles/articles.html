@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="main-content">
+		<!-- Category Archive
+            ================================================== -->
+		<section class="recent-posts row">
+			<form method="get" id="search-form">
+				<div class="form-group row">
+					<div class="col-md-8">
+						<input class="form-control" type="text" name="search" id="search-query"
+							placeholder="Search Articles">
+					</div>
+					<div class="col-md-2">
+						<input class="btn btn-success" type="submit" value="Search">
+					</div>
+				</div>
+			</form>
+			<div class="col-sm-12">
+				<div class="section-title">
+					<h2><span>Category Name</span></h2>
+				</div>
+				<div id="article-list" class="masonrygrd row listrecent">
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- /.container -->
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/articles.js' %}"></script>
+{% endblock %}

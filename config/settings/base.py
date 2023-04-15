@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     "apps.base",
     "apps.articles",
     # THIRD_PARTY_APPS
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 SITE_ID = 1
@@ -94,6 +96,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+####################
+## Rest Framework ##
+####################
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 2,
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

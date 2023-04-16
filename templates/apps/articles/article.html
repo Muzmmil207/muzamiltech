@@ -3,18 +3,18 @@
 {% block title %}{{ article.title }}{% endblock %}
 {% block content %}
 <style>
-    /* CSS styles */
-    #loading {
-        display: none;
-        text-align: center;
-        padding: 10px;
-        font-size: 18px;
-        color: #999;
-    }
+	/* CSS styles */
+	#loading {
+		display: none;
+		text-align: center;
+		padding: 10px;
+		font-size: 18px;
+		color: #999;
+	}
 
-    .item {
-        /* Your item styles here */
-    }
+	.item {
+		/* Your item styles here */
+	}
 </style>
 <div class="container">
 	<!-- Content
@@ -33,11 +33,6 @@
 								<a href="#">technology</a>
 							</li>
 						</ul>
-						<span class="post-read-more">
-							<button title="Read Story">
-								<i class="fa fa-link"></i>
-							</button>
-						</span>
 					</div>
 					<!-- End Categories -->
 					<!-- Post Title -->
@@ -59,29 +54,44 @@
 							<time class="post-date" datetime="2018-01-12">{{ article.published_at }}</time>
 						</span>
 					</small>
-				<div class="sadaff">
-					<a href="https://www.facebook.com/sharer/sharer.php?u=[URL]" target="_blank"
-						rel="noopener noreferrer">ff
-						<i class="fa fa-facebook"></i>
-					</a>
-					<a href="https://twitter.com/intent/tweet?url=[URL]&amp;text=[TITLE]&amp;via=[TWITTER_HANDLE]"
-						target="_blank" rel="noopener noreferrer">
-						<i class="fa fa-twitter"></i>
-					</a>
-					<a href="https://www.linkedin.com/shareArticle?url=[URL]&amp;title=[TITLE]" target="_blank"
-						rel="noopener noreferrer">
-						<i class="fa fa-pinterest"></i>
-					</a>
-				</div>
 				</p>
+				<div class="post-share">
+					<span class="post-read-more">
+						<a id="copy-button" title="Share Story">
+							<i class="fa fa-share"></i>
+						</a>
+					</span>
+					<div class="post-share-with">
+						<a class="social-sharing" href="https://www.facebook.com/sharer/sharer.php?u={{url}}"
+							target="_blank" rel="noopener noreferrer">
+							<i class="fa fa-facebook"></i>
+						</a>
+						<a class="social-sharing"
+							href="https://twitter.com/intent/tweet?url={{url}}&amp;text={{article.title}}"
+							target="_blank" rel="noopener noreferrer">
+							<!-- &amp;via=[TWITTER_HANDLE] -->
+							<i class="fa fa-twitter"></i>
+						</a>
+						<a class="social-sharing"
+							href="https://www.linkedin.com/shareArticle?url={{url}}&amp;title={{article.title}}"
+							target="_blank" rel="noopener noreferrer">
+							<i class="fa fa-linkedin"></i>
+						</a>
+					</div>
+				</div>
 				<!-- Prev/Next -->
 				<div class="row PageNavigation mt-4 prevnextlinks">
-					<div class="col-md-6 rightborder pl-0">
-						<a class="thepostlink" href="#">« Red Riding Hood</a>
+					{% for ar in next_prev_articles %}
+					<div class="col-md-6 {% cycle 'rightborder' 'text-right' %} pl-0">
+						<a class="thepostlink" href="{% url 'article' ar.slug %}">
+							{% cycle '«' '»' %}
+							{{ar.title}}
+						</a>
 					</div>
-					<div class="col-md-6 text-right pr-0">
+					{% endfor %}
+					<!-- <div class="col-md-6  pr-0">
 						<a class="thepostlink" href="#">We all wait for summer »</a>
-					</div>
+					</div> -->
 				</div>
 				<!-- End Prev/Next -->
 				<!-- Author Box -->
@@ -137,5 +147,19 @@
 	</div>
 </div>
 <!-- /.container -->
-
+<script>
+	const copyButton = document.getElementById('copy-button');
+	document.querySelectorAll('.social-sharing').forEach((ele) => {
+		ele.href
+	})
+	copyButton.addEventListener('click', () => {
+		const currentUrl = window.location.href;
+		navigator.clipboard.writeText(currentUrl).then(() => {
+			copyButton.textContent = 'Copy Link';
+			setTimeout(() => {
+				copyButton.textContent = 'Copied!';
+			}, 2000);
+		});
+	});
+</script>
 {% endblock %}

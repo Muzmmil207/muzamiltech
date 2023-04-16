@@ -30,9 +30,9 @@ window.addEventListener('scroll', function () {
     // Check if we've scrolled to the bottom of the page
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - footer.offsetHeight) {
       // Increment the current page number and send an AJAX request for the next page of articles
-      setTimeout(() => {
-        loadArticles(nextPage)
-      }, 3000);
+      console.log(nextPage)
+      nextPage = null
+      loadArticles(nextPage)
     }
   }
 });
@@ -63,34 +63,35 @@ function loadArticles(url) {
       var article = articles[i];
       var published_at = article.published_at.split('T')[0].split('-').join(', ');
       var element = `<div class="col-md-3 grid-item">
-      <div class="card">
-        <a href="${article.slug}">
-        <img class="img-fluid" src="${article.image_url}" max-height="390px" alt="Tree of Codes">
-        </a>
-        <div class="card-block">
-            <h2 class="card-title"><a href="${article.slug}">${article.title}</a>
-            </h2>
-            <div class="metafooter">
-                <div class="wrapfooter">
-                    <span class="author-meta">
-                        <span class="post-date">${published_at}</span>
-                    </span>
-                    <span class="post-read-more">
-                        <a href="${article.slug}" title="Read Story">
-                            <i class="fa fa-link"></i>
-                        </a>
-                    </span>
-                    <div class="clearfix">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </div>`;
+        <div class="card">
+          <a href="${article.slug}">
+          <img class="img-fluid" src="${article.image_url}" max-height="390px" alt="Tree of Codes">
+          </a>
+          <div class="card-block">
+              <h2 class="card-title"><a href="${article.slug}">${article.title}</a>
+              </h2>
+              <div class="metafooter">
+                  <div class="wrapfooter">
+                      <span class="author-meta">
+                          <span class="post-date">${published_at}</span>
+                      </span>
+                      <span class="post-read-more">
+                          <a href="${article.slug}" title="Read Story">
+                              <i class="fa fa-link"></i>
+                          </a>
+                      </span>
+                      <div class="clearfix">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>`;
       articleList.innerHTML += element;
     }
     // Animate new items
     var items = document.getElementsByClassName("col-md-3");
+    console.log(items)
     for (var i = 0; i < items.length; i++) {
       if (!isElementAnimating(items[i])) {
         setTimeout(function (item) {
@@ -108,10 +109,14 @@ function loadArticles(url) {
   }
 }
 
+const copyButton = document.getElementById('copy-button');
 
-document.onscroll = function () {
-  // console.log('window.innerHeight ',window.innerHeight)
-  // console.log('window.scrollY ',window.scrollY )
-  // console.log('document.body.offsetHeight  ',document.body.offsetHeight  )
-  console.log(footer.offsetHeight)
-}
+copyButton.addEventListener('click', () => {
+  const currentUrl = window.location.href;
+  navigator.clipboard.writeText(currentUrl).then(() => {
+    copyButton.textContent = 'Copied!';
+    setTimeout(() => {
+      copyButton.textContent = 'Copy Link';
+    }, 2000);
+  });
+});

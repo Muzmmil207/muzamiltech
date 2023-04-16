@@ -1,11 +1,16 @@
+import json
+
 from apps.articles.articles import ArticleCollector
 from apps.articles.models import Article
 from apps.users.models import User
-from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.urls import resolve, reverse
+from django.views.decorators.http import require_http_methods
 
-from .forms import ContactForm
-from .models import Contact
+from .models import Contact, NewsletterSubscriber
 
 
 def me(request):
@@ -34,9 +39,6 @@ def me(request):
 
 def home(request):
     articles = Article.objects.exclude(image_url=None).order_by("?")[:8]
-    # for i in articles:
-    #     print(i.slug)
-    #     print("\n")
     context = {"articles": articles}
     return render(request, "apps/base/home.html", context=context)
 
@@ -46,18 +48,33 @@ def about(request):
 
 
 def contact(request):
-    if request.method == "POST":
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            contact = Contact(
-                name=request.POST["name"],
-                email=request.POST["email"],
-                subject=request.POST["subject"],
-                message=request.POST["message"],
-            )
-            contact.save()
+    return render(request, "apps/base/contact.html")
 
-            form.save()
-    else:
-        form = ContactForm()
-    return render(request, "apps/base/contact.html", {"form": form})
+
+@require_http_methods(["POST"])
+def contact_handler(request):
+    data = json.loads(request.body)
+    try:
+        contact = Contact.objects.create(
+            name=data["name"],
+            email=data["email"],
+            message=data["message"],
+        )
+        contact.save()
+        return JsonResponse("Thanks for reaching out! we'll be in touch soon.", safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse("Some thing want wrong :(", safe=False)
+
+
+@require_http_methods(["POST"])
+def subscribe_handler(request):
+    data = json.loads(request.body)
+    try:
+        subscribe = NewsletterSubscriber(
+            email=data["email"],
+        )
+        subscribe.save()
+        return JsonResponse("Thanks :)", safe=False)
+    except Exception as e:
+        return JsonResponse("Some thing want wrong :(", safe=False)

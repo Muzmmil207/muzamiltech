@@ -8,6 +8,8 @@ urlpatterns = [
     path("about-us/", flatpage, {"url": "/about-us/"}, name="about"),
     # path("about", views.about, name="about"),
     path("contact", views.contact, name="contact"),
+    path("contact-handler", views.contact_handler),
+    path("subscribe-handler", views.subscribe_handler),
     path(
         "muzamil",
         views.me,

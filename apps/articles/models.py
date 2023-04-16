@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import F
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
@@ -75,6 +76,9 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("article", args=[self.slug])
 
     def plus_one(self, request):
         if request.session.get("ids") is None:

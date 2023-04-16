@@ -10,17 +10,20 @@
 				<h2><span>Contact</span></h2>
 			</div>
 			<div class="article-post">
-				<form method="POST">
+				<form id="contact-form" method="POST">
 					{% csrf_token %}
 					<div class="form-group row">
 						<div class="col-md-6">
-							<input class="form-control" type="text" name="name" placeholder="Name">
+							<input class="form-control" type="text" required id='contact-name' name="name"
+								placeholder="Name">
 						</div>
 						<div class="col-md-6">
-							<input class="form-control" type="email" name="_replyto" placeholder="E-mail Address">
+							<input class="form-control" type="email" required id='contact-email' name="email"
+								placeholder="E-mail Address">
 						</div>
 					</div>
-					<textarea rows="8" class="form-control mb-3" name="message" placeholder="Message"></textarea>
+					<textarea rows="8" class="form-control mb-3" required id='contact-message' name="message"
+						placeholder="Message"></textarea>
 					<input class="btn btn-success" type="submit" value="Send">
 				</form>
 			</div>
@@ -28,4 +31,33 @@
 	</div>
 </div>
 <!-- /.container -->
+<script>
+	const contactForm = document.getElementById('contact-form')
+	contactForm.addEventListener('submit', (e) => {
+		e.preventDefault()
+		var name = document.getElementById('contact-name').value
+		var email = document.getElementById('contact-email').value
+		var message = document.getElementById('contact-message').value
+
+		fetch('/contact-handler', {
+			method: "POST",
+			headers: {
+				'content-type': 'application/json',
+				'Accept': 'application/json',
+				'X-CSRFToken': csrftoken
+			},
+			body: JSON.stringify({ 'name': name, 'email': email, 'message': message })
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data)
+				let div = contactForm.parentNode
+				div.removeChild(contactForm)
+				var thanksMessage = document.createElement('p')
+				thanksMessage.innerText = data
+				div.appendChild(thanksMessage)
+			})
+
+	})
+</script>
 {% endblock %}

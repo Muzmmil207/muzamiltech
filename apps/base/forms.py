@@ -1,11 +1,12 @@
 from django import forms
+
 from .models import Contact
 
 
 class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
-        fields = ["name", "email", "subject", "message"]
+        fields = ["name", "email", "message"]
         widgets = {
             "message": forms.Textarea(attrs={"rows": 5}),
         }
@@ -14,7 +15,6 @@ class ContactForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["name"].widget.attrs.update({"placeholder": "Your name"})
         self.fields["email"].widget.attrs.update({"placeholder": "Your email address"})
-        self.fields["subject"].widget.attrs.update({"placeholder": "Subject"})
         self.fields["message"].widget.attrs.update({"placeholder": "Message"})
 
     def clean_email(self):

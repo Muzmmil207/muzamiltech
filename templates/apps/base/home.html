@@ -131,12 +131,14 @@
                     <div class="col-md-6 grid-item">
                         <div class="card">
                             <a href="{% url 'article' article.slug %}">
-                                <img class="img-fluid" src="{{article.image_url}}" max-height="390px" alt="Tree of Codes">
+                                <img class="img-fluid" src="{{article.image_url}}" max-height="390px"
+                                    alt="Tree of Codes">
                             </a>
                             <div class="card-block">
-                                <h2 class="card-title"><a href="{% url 'article' article.slug %}">{{article.title}}</a>
+                                <h2 class="card-title"><a
+                                        href="{% url 'article' article.slug %}">{{article.title|slice:':20'}}...</a>
                                 </h2>
-                                <h4 class="card-text">{{article.description|slice:':100'}}..</h4>
+                                <h4 class="card-text">{{article.content|slice:':100'}}...</h4>
                                 <div class="metafooter">
                                     <div class="wrapfooter">
                                         <span class="author-meta">
@@ -194,4 +196,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/subscribe-newsletter.js' %}"></script>
 {% endblock %}

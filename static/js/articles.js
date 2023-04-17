@@ -26,26 +26,31 @@ document.getElementById('search-form').addEventListener('submit', function (even
 
 // Attach an event listener to the scroll event
 window.addEventListener('scroll', function () {
-  if (nextPage) {
+  if (nextPage != null) {
     // Check if we've scrolled to the bottom of the page
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - footer.offsetHeight) {
       // Increment the current page number and send an AJAX request for the next page of articles
-      console.log(nextPage)
-      nextPage = null
-      loadArticles(nextPage)
+      document.getElementById('animation-con').innerHTML = `<lottie-player src="https://assets5.lottiefiles.com/packages/lf20_fyye8szy.json"
+      background="transparent" speed="1" style="width: 100px; height: 100px;"
+      id="lottie-player" loop autoplay>
+    </lottie-player>`
+      setTimeout(() => {
+        loadArticles(nextPage)
+        document.getElementById('animation-con').innerHTML = ''
+      }, 3000)
     }
   }
 });
 
 
 function loadArticles(url) {
+  nextPage = null
   var articleList = document.getElementById('article-list');
-
   // Show loading indicator
   var loadingDiv = document.createElement("div");
-  loadingDiv.setAttribute("id", "loading");
-  loadingDiv.innerHTML = "Loading...";
-  articleList.appendChild(loadingDiv)
+  // loadingDiv.setAttribute("id", "loading");
+  // loadingDiv.innerHTML = "Loading...";
+  // articleList.appendChild(loadingDiv)
 
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url);
@@ -91,7 +96,6 @@ function loadArticles(url) {
     }
     // Animate new items
     var items = document.getElementsByClassName("col-md-3");
-    console.log(items)
     for (var i = 0; i < items.length; i++) {
       if (!isElementAnimating(items[i])) {
         setTimeout(function (item) {

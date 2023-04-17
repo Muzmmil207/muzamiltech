@@ -5,7 +5,8 @@
             <div class="col-sm-3">
                 <div class="footer-widget">
                     <a href="#">
-                        <img src="{% static 'assets/images/logo-footer.png' %}" alt="logo footer">
+                        <img src="{% static 'assets/images/logo-footer.jpg' %}" style="border-radius: 15px;"
+                            alt="logo footer">
                     </a>
                 </div>
             </div>
@@ -22,9 +23,7 @@
                     <h5 class="title">Author</h5>
                     <ul>
                         <li><a href="{% url 'about' %}">About Us</a></li>
-                        <li><a target="_blank" href="#">Affiliates</a>
-                        </li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="{% url 'articles' %}">Blog</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>

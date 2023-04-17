@@ -56,8 +56,6 @@ function loadArticles(url) {
   xhr.open('GET', url);
   xhr.onload = function () {
     // Hide loading indicator
-    var loadingElement = document.getElementById("loading");
-    loadingElement.parentNode.removeChild(loadingElement);
 
     // Parse the response and append the new articles to the page
     var responseData = JSON.parse(xhr.responseText);

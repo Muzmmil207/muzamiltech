@@ -23,10 +23,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.flatpages",
+    'django.contrib.sitemaps',
     # LOCAL_APPS
     "apps.users",
     "apps.base",
     "apps.articles",
+    "apps.dashboard",
+    "apps.devices",
     # THIRD_PARTY_APPS
     "rest_framework",
     "rest_framework.authtoken",

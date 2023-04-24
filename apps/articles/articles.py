@@ -12,7 +12,7 @@ class ArticleCollector(DataCollector):
     URLs = {"newsdata": f"https://newsdata.io/api/1/news?apikey={settings.NEWSDATA_API_KEY}"}
 
     def newsdata(self, query):
-        count = 1
+        count = 0
         bulk = list
         url = self.URLs.get("newsdata")
         to_date, from_date = self.get_time(from_date=1)
@@ -50,11 +50,10 @@ class ArticleCollector(DataCollector):
                         article_obj.save()
                         article_obj.category.add(cate[0])
                         article_obj.save()
+                    count += 1
                 except Exception as e:
                     pass
-        # payload["page"] = data.get("nextPage")
-        # if payload["page"] is None:
-        #     break
+        return count
 
 
 url = "https://newsdata.io/api/1/news?apikey=pub_2014607f2e3972fa2475d0757936e8666bb78&q=technology&from_date=2023-04-10&to_date=2023-04-11"  # &page=1681266503d101e303c726f02a0f29fad8934599d8"

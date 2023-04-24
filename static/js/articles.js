@@ -113,7 +113,7 @@ function loadArticles(url) {
 
 const copyButton = document.getElementById('copy-button');
 
-copyButton.addEventListener('click', () => {
+function copyHandler() {
   const currentUrl = window.location.href;
   navigator.clipboard.writeText(currentUrl).then(() => {
     copyButton.textContent = 'Copied!';
@@ -121,4 +121,4 @@ copyButton.addEventListener('click', () => {
       copyButton.textContent = 'Copy Link';
     }, 2000);
   });
-});
+}

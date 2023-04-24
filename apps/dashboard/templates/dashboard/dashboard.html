@@ -1,0 +1,14 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <div class="container-fluid p-0">
+
+        <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+        <form action="{% url 'me' %}" method="get">
+            <input type="text" name="q"> <input type="submit" value="">
+        </form>
+
+    </div>
+</main>
+{% endblock %}

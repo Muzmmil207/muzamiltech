@@ -1,5 +1,5 @@
-const contactForm = document.getElementById('contact-form')
-contactForm.addEventListener('submit', (e) => {
+function contactFormSubmitHandler(e) {
+
     e.preventDefault()
     var name = document.getElementById('contact-name').value
     var email = document.getElementById('contact-email').value
@@ -23,5 +23,4 @@ contactForm.addEventListener('submit', (e) => {
             thanksMessage.innerText = data
             div.appendChild(thanksMessage)
         })
-
-})
+}

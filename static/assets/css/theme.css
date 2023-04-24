@@ -1177,3 +1177,43 @@ iframe {
     }
 
 }
+
+
+
+.devices-container {
+    max-width: 100%;
+}
+
+.devices {
+    max-width: 100%;
+    display: flex;
+    gap: 1rem;
+    overflow-x: scroll;
+    margin: 1rem 0;
+}
+
+.device {
+    width: 150px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.image {
+    width: 150px;
+    height: 70%;
+    padding: 0.5rem;
+}
+
+.device img {
+    height: 100%;
+}
+
+.device a {
+    color: #111;
+    font-size: 16px;
+}
+
+.device-info {
+    text-align: center;
+}

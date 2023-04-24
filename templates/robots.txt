@@ -1,0 +1,5 @@
+User-Agent: *
+
+Disallow: /dashboard/
+
+Sitemap: https://muztech.onrender.com/sitemap.xml

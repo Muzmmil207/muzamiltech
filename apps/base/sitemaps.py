@@ -5,7 +5,7 @@ from apps.articles.models import Article
 class ArticleSitemap(Sitemap):
     changefreq = "weekly"
     priority = 0.8
-    protocol = "http"
+    protocol = "https"
 
     def items(self):
         return Article.objects.all()

@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from utils.utils import get_url
+from utils.functional import get_url
 
 from .models import Article
 

@@ -1,0 +1,14 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <p>new_categories => {{new_categories}}</p>
+    <p>new_brand => {{new_brand}}</p>
+    <p>new_devices => {{new_devices}}</p>
+    <p>total_results {{total_results}}</p>
+    <div>
+        <a href="{% url 'dashboard' %}">dashboard</a>
+    </div>
+</main>
+
+{% endblock %}

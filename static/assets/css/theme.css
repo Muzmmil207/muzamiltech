@@ -1194,14 +1194,13 @@ iframe {
 
 .device {
     width: 150px;
-    height: 300px;
     display: flex;
     flex-direction: column;
 }
 
 .image {
     width: 150px;
-    height: 70%;
+    height: 150px;
     padding: 0.5rem;
 }
 

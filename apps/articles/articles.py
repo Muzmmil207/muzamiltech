@@ -13,7 +13,6 @@ class ArticleCollector(DataCollector):
 
     def newsdata(self, query):
         count = 0
-        bulk = list
         url = self.URLs.get("newsdata")
         to_date, from_date = self.get_time(from_date=1)
         payload = {
@@ -49,6 +48,9 @@ class ArticleCollector(DataCollector):
                         )
                         article_obj.save()
                         article_obj.category.add(cate[0])
+                        article_obj.content = "".join(
+                            [f"<p>{i}.</p>" for i in article_obj.content.split(". ")]
+                        )
                         article_obj.save()
                     count += 1
                 except Exception as e:

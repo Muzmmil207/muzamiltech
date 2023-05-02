@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from apps.articles.articles import ArticleCollector
 from apps.dashboard.models import GuestLocation
 from apps.dashboard.serializer import GuestLocationSerializer
+from apps.devices.forms import DeviceForm
+from apps.devices.models import Device
 from apps.users.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -16,10 +18,14 @@ from django.shortcuts import redirect, render
 @login_required(login_url="login")
 def dashboard(request):
     visitors = GuestLocation.objects.all()
-
+    devices = Device.objects.filter(status="updated once")
+    devices_form = DeviceForm()
+    print(devices.count())
     context = {
         "messages": "messages",
         "visitors": visitors,
+        "devices": devices,
+        "d_form": devices_form,
     }
     return render(request, "dashboard/dashboard.html", context)
 

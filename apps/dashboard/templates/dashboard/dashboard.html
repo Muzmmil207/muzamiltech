@@ -4,11 +4,54 @@
 <main class="content">
     <div class="container-fluid p-0">
 
-        <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+        <h1 class="h3 mb-3"><strong>New</strong> Articles</h1>
         <form action="{% url 'me' %}" method="get">
-            <input type="text" name="q"> <input type="submit" value="">
+            <input type="text" name="q">
+            <div>
+                <input type="submit" value="submit">
+            </div>
         </form>
 
     </div>
+    <div class="container-fluid p-0">
+
+        <h1 class="h3 mb-3"><strong>New</strong> Devices</h1>
+        <form action="{% url 'insert-devices' %}" method="post">
+            {% csrf_token %}
+            <input type="date" name="day"><input type="text" name="category">
+            <div>
+                <input type="submit" value="submit">
+            </div>
+        </form>
+
+    </div>
+    <div class="container-fluid p-0">
+
+        <h1 class="h3 mb-3"><strong>update</strong> Devices</h1>
+        <form action="{% url 'update-device' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <select name="id">
+                    {% for device in devices %}
+                    <option value="{{ device.id }}">{{ device.image }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <input type="submit" value="submit">
+            </div>
+        </form>
+        <hr>
+        <form action="{% url 'update-device' %}" method="post">
+            {% csrf_token %}
+            <div>
+                {{d_form}}
+            </div>
+            <div>
+                <input type="submit" value="submit">
+            </div>
+        </form>
+    </div>
 </main>
+
 {% endblock %}

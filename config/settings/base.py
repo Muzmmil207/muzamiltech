@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.flatpages",
-    'django.contrib.sitemaps',
+    "django.contrib.sitemaps",
     # LOCAL_APPS
     "apps.users",
     "apps.base",
@@ -132,3 +132,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Articles APIs
 NEWSDATA_API_KEY = "pub_2014607f2e3972fa2475d0757936e8666bb78"
+TECHSPECS_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImN1c19OZzhyRWREUjluN1BadCIsIm1vZXNpZlByaWNpbmdJZCI6InByaWNlXzFNUXF5dkJESWxQbVVQcE1SWUVWdnlLZSIsImlhdCI6MTY4MTAwMTg5Mn0.4t1LrJxPDvCzErCAJ3oT8_p1EcNwgGuMUSjxW7dIELU"
+DEVICE_SPECS_API_KEY = "750d6fd25e6a7c9cec6154f3f658a438bd245c2e59674f0a7780b6dd43a035189b223ad2d319affcb5bd9e64bb9d822694012095e3e5f8465dd588e52e09ae0142d797457856a86a9d9196670f4237126e722878652f83255e3fb2ccfa01479a1f6f2e7d9f59ca7a834a491d9d9798d425441a6c2e3175136c6ec06f64648d48"

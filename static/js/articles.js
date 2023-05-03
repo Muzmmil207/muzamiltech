@@ -53,20 +53,19 @@ function loadArticles(url) {
   // articleList.appendChild(loadingDiv)
 
   var xhr = new XMLHttpRequest();
-  if (!url == null) {
-    xhr.open('GET', url);
-    xhr.onload = function () {
-      // Hide loading indicator
+  xhr.open('GET', url);
+  xhr.onload = function () {
+    // Hide loading indicator
 
-      // Parse the response and append the new articles to the page
-      var responseData = JSON.parse(xhr.responseText);
-      nextPage = responseData.next
-      let articles = responseData.results
+    // Parse the response and append the new articles to the page
+    var responseData = JSON.parse(xhr.responseText);
+    nextPage = responseData.next
+    let articles = responseData.results
 
-      for (var i = 0; i < articles.length; i++) {
-        var article = articles[i];
-        var published_at = article.published_at.split('T')[0].split('-').join(', ');
-        var element = `<div class="col-md-3 grid-item">
+    for (var i = 0; i < articles.length; i++) {
+      var article = articles[i];
+      var published_at = article.published_at.split('T')[0].split('-').join(', ');
+      var element = `<div class="col-md-3 grid-item">
           <div class="card">
             <a href="${article.slug}">
             <img class="img-fluid" src="${article.image_url}" max-height="390px" alt="Tree of Codes">
@@ -91,20 +90,19 @@ function loadArticles(url) {
             </div>
         </div>
       </div>`;
-        articleList.innerHTML += element;
+      articleList.innerHTML += element;
+    }
+    // Animate new items
+    var items = document.getElementsByClassName("col-md-3");
+    for (var i = 0; i < items.length; i++) {
+      if (!isElementAnimating(items[i])) {
+        setTimeout(function (item) {
+          item.style.opacity = 0;
+        }, i * 1000, items[i]);
       }
-      // Animate new items
-      var items = document.getElementsByClassName("col-md-3");
-      for (var i = 0; i < items.length; i++) {
-        if (!isElementAnimating(items[i])) {
-          setTimeout(function (item) {
-            item.style.opacity = 0;
-          }, i * 1000, items[i]);
-        }
-      }
-    };
-    xhr.send();
-  }
+    }
+  };
+  xhr.send();
 
   // Check whether an element is currently being animated
   function isElementAnimating(element) {

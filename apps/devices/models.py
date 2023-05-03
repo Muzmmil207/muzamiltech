@@ -139,7 +139,14 @@ class Device(Model):
 
     @property
     def image(self):
+        """Return an image url"""
         return self.media_set.filter(is_feature=True).first().image
+
+    def source(self, src: str = "https://api.device-specs.io/api"):
+        """Return the first device source object
+        that match the src query
+        """
+        return self.devicesource_set.filter(source__icontains=src).first()
 
     def __str__(self):
         return f"{self.model} | {self.status}"
@@ -254,6 +261,26 @@ class DeviceType(Model):
         return self.name
 
 
+class DeviceTypeAttribute(Model):
+    """
+    Device type attributes link table
+    """
+
+    Device_attribute = models.ForeignKey(
+        DeviceAttribute,
+        related_name="Device_attribute",
+        on_delete=models.PROTECT,
+    )
+    Device_type = models.ForeignKey(
+        DeviceType,
+        related_name="Device_type",
+        on_delete=models.PROTECT,
+    )
+
+    class Meta:
+        unique_together = ("Device_attribute", "Device_type")
+
+
 class DeviceAttributeValue(Model):
     """
     Device attribute value table
@@ -290,23 +317,3 @@ class DeviceAttributeValues(Model):
             "attribute_values",
             "device",
         )
-
-
-class DeviceTypeAttribute(Model):
-    """
-    Device type attributes link table
-    """
-
-    Device_attribute = models.ForeignKey(
-        DeviceAttribute,
-        related_name="Device_attribute",
-        on_delete=models.PROTECT,
-    )
-    Device_type = models.ForeignKey(
-        DeviceType,
-        related_name="Device_type",
-        on_delete=models.PROTECT,
-    )
-
-    class Meta:
-        unique_together = ("Device_attribute", "Device_type")

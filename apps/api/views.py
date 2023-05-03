@@ -20,7 +20,7 @@ def get_routes(request, format=None):
 
     return Response(
         {
-            "all user Articles": reverse("articles_list", request=request, format=format),
+            "all user Articles": reverse("articles-api", request=request, format=format),
         }
     )
 

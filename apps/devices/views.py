@@ -138,6 +138,7 @@ def update_devices_data(request):
         status = request.POST.get("status")
         category = DeviceCategory.objects.get(id=request.POST.get("category", 0))
         devices = Device.objects.filter(status=status, category=category)
+        """If New Inserted Status"""
         if status == "new inserted":
             for device in devices:
                 device_model = device.model.replace(" ", "+")
@@ -146,11 +147,15 @@ def update_devices_data(request):
                     "Authorization": f"Bearer {settings.DEVICE_SPECS_API_KEY}",
                 }
                 url = f"https://api.device-specs.io/api/fuzzy-search/search?query={device_model}"
-                response = requests.get(url, headers=headers)  # , params={"query": device_model})
+                try:
+                    response = requests.get(
+                        url, headers=headers
+                    )  # , params={"query": device_model})
+                except Exception as e:
+                    context["exception"] = e
                 print(response.url)
                 data = response.json()
                 data = data[category.name.lower()]
-                print(data)
                 if len(data) > 0:
                     first_row = data.pop(0)
                     for row in data:
@@ -163,5 +168,24 @@ def update_devices_data(request):
                         context["new_devices"] += 1
 
                     update_devices(device, first_row)
+
+        """If Updated Once Status"""
+        if status == "updated once":
+            for device in devices:
+                device_model = device.model.replace(" ", "+")
+                device_source = device.source()
+                # headers = {
+                #     "Authorization": f"Bearer {settings.DEVICE_SPECS_API_KEY}",
+                # }
+                # url = f"https://api.device-specs.io/api/smartphones/{device_source.web_id}?populate=*"
+                # try:
+                #     response = requests.get(
+                #         url, headers=headers
+                #     )  # , params={"query": device_model})
+                # except Exception as e:
+                #     context["exception"] = e
+                # print(response.url)
+                # data = response.json()
+                # data = data[category.name.lower()]
 
     return render(request, "dashboard/update-devices.html", context)

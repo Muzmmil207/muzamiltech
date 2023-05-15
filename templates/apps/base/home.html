@@ -1,6 +1,23 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block content %}
+<style>
+    /* brands-container */
+    .brands-container {}
+
+    .brand {
+        margin: 2px;
+        display: inline-block;
+        padding: 5px;
+        background-color: #0274d854 !important;
+        border-radius: 8px;
+        border: solid 2px #0275d8;
+    }
+
+    .brand a {
+        color: #0275d8;
+    }
+</style>
 <!-- Home Jumbotron
     ================================================== -->
 <section class="intro">
@@ -179,7 +196,31 @@
         </div>
     </div>
 </section>
-<div class="row">
+<section class="row">
+    <div class="col-sm-12 bg-light">
+        <div class="section-title">
+            <h2><span>Devices Brands</span></h2>
+        </div>
+        <div class="brands-container">
+            {% for brand in brands %}
+            <div class="brand">
+                <a href="{% url 'devices-by-brand' brand.slug %}">
+                    <span>{{brand.name}}</span>
+                </a>
+            </div>
+            {% endfor %}
+            <div class="brand">
+                <a href="{% url 'brands' %}">
+                    <span>view all</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="recent-posts row">
+    <div class="section-title">
+        <h2><span>Last Articles</span></h2>
+    </div>
     {% for article in articles %}
     <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <article>
@@ -200,7 +241,8 @@
     </div>
     <!-- col.// -->
     {% endfor %}
-</div>
+
+</section>
 </div>
 </div>
 <!-- /.container -->

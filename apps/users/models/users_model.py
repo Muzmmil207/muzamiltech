@@ -12,6 +12,9 @@ from ..managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    class Meta:
+        db_table = "users"
+
     id = models.UUIDField(
         primary_key=True,
         editable=False,

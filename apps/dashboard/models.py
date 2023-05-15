@@ -11,3 +11,6 @@ class GuestLocation(models.Model):
 
     def __str__(self):
         return self.region
+
+    class Meta:
+        abstract = True

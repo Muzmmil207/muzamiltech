@@ -3,6 +3,7 @@ import json
 import requests
 
 from apps.articles.models import Article
+from apps.devices.models import Brand, Device
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -13,7 +14,9 @@ from .models import Contact, NewsletterSubscriber
 
 def home(request):
     articles = Article.objects.exclude(image_url=None).order_by("?")[:4]
-    context = {"articles": articles}
+    brands = Brand.objects.all()
+    devices = Device.objects.all()
+    context = {"articles": articles, "brands": brands, "devices": devices}
     return render(request, "apps/base/home.html", context=context)
 
 

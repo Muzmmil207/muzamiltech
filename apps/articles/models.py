@@ -3,9 +3,10 @@ from django.db.models import F
 from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+from utils.models.models_fields import AbstractModel
 
 
-class Category(models.Model):
+class Category(AbstractModel):
     """
     Articles Category table
     """
@@ -17,22 +18,20 @@ class Category(models.Model):
         db_index=True,
         unique=True,
     )
-    slug = models.SlugField(
-        max_length=150,
-        verbose_name=_("The category slug to form URL."),
-        help_text=_("format: required, letters, numbers, underscore, or hyphens"),
-        unique=True,
-    )
 
     class Meta:
         verbose_name = _("article category")
         verbose_name_plural = _("article categories")
+        db_table = "Categories"
 
     def __str__(self):
         return self.name
 
 
-class Article(models.Model):
+class Article(AbstractModel):
+    class Meta:
+        db_table = "articles"
+
     title = models.CharField(
         max_length=255, verbose_name=_("Article Title"), db_index=True, unique=True
     )
@@ -40,12 +39,6 @@ class Article(models.Model):
         max_length=255,
         verbose_name=_("Meta Title"),
         help_text=_("The meta title to be used for browser title and SEO."),
-    )
-    slug = models.SlugField(
-        max_length=255,
-        verbose_name=_("Slug"),
-        help_text=_("The article slug to form URL."),
-        unique=True,
     )
     category = models.ManyToManyField(Category, related_name="categories")
     description = models.TextField(
@@ -96,6 +89,9 @@ class ArticleMeta(models.Model):
     The Article Meta Table can be used to store additional information of a article
     including the article banner URL etc.
     """
+
+    class Meta:
+        db_table = "articles_meta"
 
     article = models.OneToOneField(Article, on_delete=models.CASCADE, unique=True)
     key = models.CharField(

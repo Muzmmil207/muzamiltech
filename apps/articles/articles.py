@@ -26,7 +26,7 @@ class ArticleCollector(DataCollector):
         data = response.json()
         articles = data["results"]
         for article in articles:
-            if article.get("image_url"):
+            if article.get("image_url") != None:
                 try:
                     article_obj = self.model(
                         title=article.get("title", ""),

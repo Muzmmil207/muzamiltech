@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse
 
 from apps.articles.models import Article
 from apps.devices.models import Device
-from django.db.models import Q
+from django.db.models import Count, F, Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
@@ -21,6 +21,7 @@ def get_routes(request, format=None):
     return Response(
         {
             "all user Articles": reverse("articles-api", request=request, format=format),
+            "all user Devices": reverse("devices-api", request=request, format=format),
         }
     )
 
@@ -64,4 +65,13 @@ class DevicesList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Device.objects.exclude(status="new inserted").order_by("?")
+        for q in queryset:
+            print(q.children.count())
+        # queryset = ( children
+        #     Device.objects.exclude(status="new inserted")
+        #     .annotate(num_of_children=Count(F("pa")))
+        #     .filter(num_of_children=1)
+        #     .order_by("?")
+        # )
+        # queryset = Device.objects.order_by("?") device.children.count
         return queryset

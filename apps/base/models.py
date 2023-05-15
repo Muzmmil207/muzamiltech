@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 class NewsletterSubscriber(models.Model):
+    class Meta:
+        db_table = "news_letter_subscribers"
+
     email = models.EmailField(unique=True)
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
@@ -12,6 +15,9 @@ class NewsletterSubscriber(models.Model):
 
 
 class Contact(models.Model):
+    class Meta:
+        db_table = "contacts"
+
     name = models.CharField(max_length=255)
     email_regex = RegexValidator(
         regex=r"^[A-z0-9\.]+@[A-z0-9]+\.(com|net|org|info)$",

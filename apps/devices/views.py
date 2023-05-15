@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from io import BytesIO
 from operator import mul
@@ -5,23 +6,51 @@ from operator import mul
 import requests
 from PIL import Image
 
+from apps.articles.models import Category
 from django.conf import settings
 from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 
-from .models import Brand, Device, DeviceCategory, DeviceSource, Media
+from .models import (
+    Brand,
+    Device,
+    DeviceAttribute,
+    DeviceAttributeValue,
+    DeviceSource,
+    DeviceType,
+    DeviceTypeAttribute,
+    Media,
+)
+
+
+def devices(request):
+    context = {}
+    return render(request, "apps/devices/devices.html", context=context)
+
+
+def brands(request):
+    context = {}
+    return render(request, "apps/devices/brands.html", context=context)
 
 
 def device_details(request, brand, model):
-    context = {}
+    device = Device.objects.filter(slug=model, brand__name=brand).annotate().first()
+    print(device)
+    context = {"device": device}
     return render(request, "apps/devices/device-details.html", context=context)
 
 
 def devices_by_brand(request, brand):
-    context = {}
+    devices = Device.objects.filter(brand__slug=brand)
+    context = {"devices": devices}
     return render(request, "apps/devices/devices-by-brand.html", context=context)
+
+
+def search_devices(request):
+    context = {}
+    return render(request, "apps/devices/search-devices.html", context=context)
 
 
 def insert_devices_data(request):
@@ -30,13 +59,20 @@ def insert_devices_data(request):
         "new_brand": 0,
         "new_devices": 0,
     }
+
     if request.method == "POST":
-        date = datetime.strptime(request.POST.get("day"), "%Y-%m-%d")
-        day = "{0:%Y-%m-%d}".format(date)
+        from_date = datetime.strptime(request.POST.get("day"), "%Y-%m-%d")
+        to_date = datetime.strptime(request.POST.get("to_day"), "%Y-%m-%d")
+        day = "{0:%Y-%m-%d}".format(from_date)
+        to_day = "{0:%Y-%m-%d}".format(to_date)
+
         category = request.POST.get("category")
-        device_category, device_category_ = DeviceCategory.objects.get_or_create(
-            name=category, slug=slugify(category)
+        device_type = DeviceType.objects.get(id=request.POST.get("type", 1))
+        device_category, device_category_ = Category.objects.get_or_create(
+            name=category,
+            slug=slugify(category),
         )
+
         context["new_categories"] += device_category_
         headers = {
             "accept": "application/json",
@@ -44,9 +80,10 @@ def insert_devices_data(request):
             "Authorization": f"Bearer {settings.TECHSPECS_API_KEY}",
         }
         url = "https://api.techspecs.io/v4/all/products"
-        payload = {"category": [category], "from": day}
+        payload = {"category": [category], "from": day, "to": to_day}
         response = requests.post(url, json=payload, headers=headers, params={"page": 0})
         data = response.json()
+
         data = data["data"]
         context["total_results"] = data["total_results"]
         while int(data["page"]) < data["total_pages"]:
@@ -63,6 +100,7 @@ def insert_devices_data(request):
                     version=item["product"]["version"],
                     slug=slugify(item["product"]["model"]),
                     category=device_category,
+                    type=device_type,
                 )
                 context["new_devices"] += is_created
                 if is_created:
@@ -86,7 +124,8 @@ def insert_devices_data(request):
                 # print(response.url)
                 data = response.json()
                 data = data["data"]
-            except:
+            except Exception as e:
+                context["exception"] = e
                 break
 
     return render(request, "dashboard/new-devices.html", context)
@@ -98,94 +137,123 @@ def update_devices_data(request):
     }
 
     def update_devices(device_obj: Device, dic: dict):
-        device_obj.info = dic.get("info", F("info"))
-        new_device_record.mpn = dic.get("info").split("-")[-1].strip()
+        device_obj.released = datetime.strptime(dic["date"]["released"], "%Y-%m-%d")
+        device_obj.announced = datetime.strptime(dic["date"]["announced"], "%Y %b %d")
         device_obj.status = "updated once"
-        DeviceSource.objects.create(
-            device=device_obj,
-            web_id=dic["id"],
-            source=response.url,
-        )
+        device_obj.save()
+        print(device_obj.status)
+        for img in dic["image"]:
+            if dic["image"][img]:
+                Media.objects.get_or_create(
+                    device=device_obj,
+                    image=dic["image"][img],
+                    alt_text=f"{img} - {device_obj.model}",
+                    is_feature=img == "front",
+                )
 
-        images = dic["images"]
-        higher_pixels = 0
-        for image in images:
-            image["is_feature"] = False
-            resp = requests.get(image["url"])
-            # Read the content of the resp into a BytesIO object
-            bytes_io_obj = BytesIO(resp.content)
-            # Open the image from the BytesIO object
-            img_obj = Image.open(bytes_io_obj)
-            # Get the size of the image
-            img_pixels = mul(img_obj.size[0], img_obj.size[1])
-
-            if img_pixels > higher_pixels:
-                higher_pixels = img_pixels
-                image["is_feature"] = True
-            print(img_pixels)  # Output: (width, height)
-
-        for image in images:
-            Media.objects.create(
-                device=device_obj,
-                image=image["url"],
-                alt_text=device_obj.model,
-                is_feature=image["is_feature"],
-            )
-
-        return device_obj
+        return
 
     if request.method == "POST":
-        status = request.POST.get("status")
-        category = DeviceCategory.objects.get(id=request.POST.get("category", 0))
-        devices = Device.objects.filter(status=status, category=category)
+        status = request.POST.get("status", "")
+        category = Category.objects.get(id=request.POST.get("category", 0))
+        device_type = DeviceType.objects.get(id=request.POST.get("type", 1))
+
         """If New Inserted Status"""
-        if status == "new inserted":
-            for device in devices:
-                device_model = device.model.replace(" ", "+")
+        while Device.objects.filter(status=status, category=category) and status == "new inserted":
+            device = Device.objects.filter(status=status, category=category).first()
+            device_source = device.source(src="https://api.techspecs.io/v4/")
 
-                headers = {
-                    "Authorization": f"Bearer {settings.DEVICE_SPECS_API_KEY}",
-                }
-                url = f"https://api.device-specs.io/api/fuzzy-search/search?query={device_model}"
-                try:
-                    response = requests.get(
-                        url, headers=headers
-                    )  # , params={"query": device_model})
-                except Exception as e:
-                    context["exception"] = e
-                print(response.url)
-                data = response.json()
-                data = data[category.name.lower()]
-                if len(data) > 0:
-                    first_row = data.pop(0)
-                    for row in data:
-                        new_device_record = device
-                        new_device_record.pk = None
-                        new_device_record.id = None
-                        update_devices(new_device_record, row)
-                        new_device_record.device = device
-                        new_device_record.save()
-                        context["new_devices"] += 1
+            headers = {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {settings.TECHSPECS_API_KEY}",
+            }
+            url = (
+                "https://api.techspecs.io/v4/product/detail"  # ?productId=63e96260ff7af4b68a304280"
+            )
+            try:
+                response = requests.get(
+                    url, headers=headers, params={"productId": device_source.web_id}
+                )
+            except Exception as e:
+                context["exception"] = e
+            with open("files/token.json") as data:
+                data = json.loads(data.read())
+                print(data["status"])
+            # data = response.json()
+            # data = data.get("data", {})
+            products = data["data"]["items"]
+            if products:
+                for product in products:
+                    device_record = Device.manager.get_or_none(
+                        device_Source__web_id=product["product"]["id"]
+                    )
+                    if device_record:
+                        update_devices(device_record, product)
+                    else:
+                        brand, brand_ = Brand.objects.get_or_create(
+                            name=product["product"]["brand"],
+                            slug=slugify(product["product"]["brand"]),
+                        )
+                        device, is_created = Device.objects.get_or_create(
+                            brand=brand,
+                            model=product["product"]["model"],
+                            version=product["product"]["version"],
+                            slug=slugify(product["product"]["model"]),
+                            category=category,
+                            type=device_type,
+                        )
+                        context["new_devices"] += is_created
+                        id = product["product"]["id"]
+                        if is_created:
+                            DeviceSource.objects.create(
+                                device=device,
+                                web_id=product["product"]["id"],
+                                source=f"https://api.techspecs.io/v4/product/detail?productId={id}",
+                                # source=response.url,
+                            )
+                            device_record = device
+                            update_devices(device_record, product)
 
-                    update_devices(device, first_row)
+                    device_record.refresh_from_db()
+                    device_record.parent = device
+                    device_record.save()
+                    context["new_devices"] += 1
+                    del product["product"]
+                    del product["image"]
+                    del product["date"]
 
-        """If Updated Once Status"""
-        if status == "updated once":
-            for device in devices:
-                device_model = device.model.replace(" ", "+")
-                device_source = device.source()
-                # headers = {
-                #     "Authorization": f"Bearer {settings.DEVICE_SPECS_API_KEY}",
-                # }
-                # url = f"https://api.device-specs.io/api/smartphones/{device_source.web_id}?populate=*"
-                # try:
-                #     response = requests.get(
-                #         url, headers=headers
-                #     )  # , params={"query": device_model})
-                # except Exception as e:
-                #     context["exception"] = e
-                # print(response.url)
-                # data = response.json()
-                # data = data[category.name.lower()]
+                    for key, values in product.items():
+                        device_type_attribute, _ = DeviceTypeAttribute.objects.get_or_create(
+                            name=key
+                        )
+                        device_type_attribute.device_type_attributes.add(device_record.type)
+                        device_type_attribute.save()
 
+                        def device_attributes_data(type_attributes_obj, key, value):
+                            device_attribute, _ = DeviceAttribute.objects.get_or_create(
+                                device_type_attribute=type_attributes_obj, attribute=key
+                            )
+                            DeviceAttributeValue.objects.get_or_create(
+                                device_attribute=device_attribute, device=device_record, value=value
+                            )
+                            return
+
+                        for key in values:
+                            value = values[key]
+                            if type(value) == dict:
+                                (
+                                    device_type_attribute,
+                                    _,
+                                ) = DeviceTypeAttribute.objects.get_or_create(
+                                    name=key, parent=device_type_attribute
+                                )
+                                print(value)
+                                for k, v in value.items():
+
+                                    device_attributes_data(device_type_attribute, k, v)
+                            else:
+                                print("value", value)
+                                device_attributes_data(device_type_attribute, key, value)
+            break
     return render(request, "dashboard/update-devices.html", context)

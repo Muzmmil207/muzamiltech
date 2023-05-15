@@ -17,13 +17,10 @@ from django.shortcuts import redirect, render
 
 @login_required(login_url="login")
 def dashboard(request):
-    visitors = GuestLocation.objects.all()
+    # visitors = GuestLocation.objects.all()
     devices = Device.objects.filter(status="updated once")
     devices_form = DeviceForm()
-    print(devices.count())
     context = {
-        "messages": "messages",
-        "visitors": visitors,
         "devices": devices,
         "d_form": devices_form,
     }

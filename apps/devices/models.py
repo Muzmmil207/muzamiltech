@@ -1,12 +1,26 @@
+from apps.articles.models import Category
+from django.contrib.auth.models import BaseUserManager
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Model
-from utils.functional import unique_code
+from utils.models.models_fields import AbstractModel
 
 
-class Brand(Model):
+class CustomManager(BaseUserManager):
+    def get_or_none(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
+
+
+class Brand(AbstractModel):
     """
     Device brand table
     """
+
+    class Meta:
+        db_table = "brand"
 
     name = models.CharField(
         max_length=15,
@@ -16,59 +30,29 @@ class Brand(Model):
         verbose_name="brand name",
         help_text="format: required, unique, max-255",
     )
-    slug = models.SlugField(
-        max_length=150,
-        null=False,
-        unique=False,
-        blank=False,
-        verbose_name="Brand safe URL",
-        help_text="format: required, letters, numbers, underscore, or hyphens",
-    )
 
     def __str__(self):
         return self.name
 
 
-class DeviceCategory(Model):
-    """
-    Devices Categories table
-    """
-
-    name = models.CharField(
-        max_length=100,
-        null=False,
-        unique=False,
-        blank=False,
-        verbose_name="category name",
-        help_text="format: required, max-100",
-    )
-    slug = models.SlugField(
-        max_length=150,
-        null=False,
-        unique=False,
-        blank=False,
-        verbose_name="category safe URL",
-        help_text="format: required, letters, numbers, underscore, or hyphens",
-    )
-
-    class Meta:
-        verbose_name = "Devices category"
-        verbose_name_plural = "Devices categories"
-
-    def __str__(self):
-        return self.name
-
-
-class Device(Model):
+class Device(AbstractModel):
     """
     Device details table
     """
 
+    class Meta:
+        db_table = "device"
+
+    objects = models.Manager()
+    manager = CustomManager()
+
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey("DeviceType", on_delete=models.SET_NULL, null=True)
     model = models.CharField(
         max_length=50,
         unique=False,
         null=False,
+        db_index=True,
         blank=False,
         verbose_name="Device name",
     )
@@ -85,14 +69,6 @@ class Device(Model):
         blank=True,
         verbose_name="Device version",
     )
-    slug = models.SlugField(
-        max_length=255,
-        unique=False,
-        null=False,
-        blank=False,
-        verbose_name="Device safe URL",
-        help_text="format: required, letters, numbers, underscores or hyphens",
-    )
     info = models.TextField(
         unique=False,
         null=False,
@@ -101,7 +77,7 @@ class Device(Model):
         verbose_name="Device description",
         help_text="format: required",
     )
-    category = models.ForeignKey(DeviceCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     released = models.DateTimeField(
         null=True,
         blank=True,
@@ -133,9 +109,14 @@ class Device(Model):
             ("updated twice", "Updated twice"),
         ),
     )
+    attributes = models.ManyToManyField(
+        "DeviceAttribute",
+        related_name="attributes",
+        through="DeviceAttributeValue",
+    )
 
     class Meta:
-        unique_together = ("model", "mpn")
+        unique_together = ("model", "version")
 
     @property
     def image(self):
@@ -146,7 +127,7 @@ class Device(Model):
         """Return the first device source object
         that match the src query
         """
-        return self.devicesource_set.filter(source__icontains=src).first()
+        return self.device_Source.filter(source__icontains=src).first()
 
     def __str__(self):
         return f"{self.model} | {self.status}"
@@ -163,7 +144,14 @@ class Device(Model):
 class DeviceSource(Model):
     """ """
 
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = (
+            "web_id",
+            "source",
+        )
+        db_table = "devices_sources"
+
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name="device_Source")
     web_id = models.CharField(
         max_length=40,
         verbose_name="Device website ID",
@@ -181,6 +169,11 @@ class Media(Model):
     """
     The Device image table.
     """
+
+    class Meta:
+        verbose_name = "Device image"
+        verbose_name_plural = "Device images"
+        db_table = "media"
 
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     image = models.URLField(
@@ -207,40 +200,14 @@ class Media(Model):
     def __str__(self):
         return self.alt_text
 
-    class Meta:
-        verbose_name = "Device image"
-        verbose_name_plural = "Device images"
-
-
-class DeviceAttribute(Model):
-    """
-    Device attribute table
-    """
-
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-        null=False,
-        blank=False,
-        verbose_name="Device attribute name",
-        help_text="format: required, unique, max-255",
-    )
-    description = models.TextField(
-        unique=False,
-        null=False,
-        blank=False,
-        verbose_name="Device attribute description",
-        help_text="format: required",
-    )
-
-    def __str__(self):
-        return self.name
-
 
 class DeviceType(Model):
     """
     Device type table
     """
+
+    class Meta:
+        db_table = "device_types"
 
     name = models.CharField(
         max_length=255,
@@ -251,69 +218,82 @@ class DeviceType(Model):
         help_text="format: required, unique, max-255",
     )
 
-    Device_type_attributes = models.ManyToManyField(
-        DeviceAttribute,
-        related_name="Device_type_attributes",
-        through="DeviceTypeAttribute",
-    )
-
     def __str__(self):
         return self.name
 
 
 class DeviceTypeAttribute(Model):
     """
-    Device type attributes link table
+    Device attribute table
     """
 
-    Device_attribute = models.ForeignKey(
-        DeviceAttribute,
-        related_name="Device_attribute",
-        on_delete=models.PROTECT,
-    )
-    Device_type = models.ForeignKey(
-        DeviceType,
-        related_name="Device_type",
-        on_delete=models.PROTECT,
-    )
-
     class Meta:
-        unique_together = ("Device_attribute", "Device_type")
+        db_table = "devices_types_attributes"
+
+    name = models.CharField(
+        max_length=255,
+        unique=True,
+        null=False,
+        blank=False,
+        verbose_name="Device attribute name",
+        help_text="format: required, unique, max-255",
+    )
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.PROTECT,
+        related_name="children",
+        null=True,
+        blank=True,
+        help_text="It can be used to form the table of content of the parent post of series.",
+    )
+    device_type_attributes = models.ManyToManyField(
+        DeviceType,
+        related_name="device_type_attributes",
+    )
+
+    def __str__(self):
+        return self.name
 
 
-class DeviceAttributeValue(Model):
+class DeviceAttribute(Model):
     """
     Device attribute value table
     """
 
-    Device_attribute = models.ForeignKey(
-        DeviceAttribute,
-        related_name="Device_attributes",
+    class Meta:
+        db_table = "devices_attributes"
+
+    device_type_attribute = models.ForeignKey(
+        DeviceTypeAttribute,
+        related_name="device_attributes",
         on_delete=models.PROTECT,
     )
-    attribute_value = models.CharField(
-        max_length=255,
+    attribute = models.CharField(
+        max_length=50,
         unique=False,
         null=False,
         blank=False,
-        verbose_name="attribute value",
+        verbose_name="attribute",
     )
 
 
-class DeviceAttributeValues(Model):
+class DeviceAttributeValue(Model):
     """
     Device attribute values link table
     """
 
-    attribute_values = models.ForeignKey(
-        "DeviceAttributeValue",
-        related_name="attribute_values",
+    class Meta:
+        db_table = "devices_attributes_values"
+
+    device_attribute = models.ForeignKey(
+        DeviceAttribute,
+        related_name="device_Attributes",
         on_delete=models.PROTECT,
     )
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (
-            "attribute_values",
-            "device",
-        )
+    device = models.ForeignKey(Device, related_name="devices", on_delete=models.CASCADE)
+    value = models.CharField(
+        max_length=255,
+        unique=False,
+        null=False,
+        blank=False,
+    )

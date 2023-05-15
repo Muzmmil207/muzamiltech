@@ -217,36 +217,39 @@
         </div>
     </div>
 </section>
-<section class="recent-posts row">
+<div>
     <div class="section-title">
         <h2><span>Last Articles</span></h2>
     </div>
-    {% for article in articles %}
-    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-        <article>
-            <a href="{% url 'article' article.slug %}" class="img-fluid">
-                <img class="rounded w-100" src="{{article.image_url}}" style="object-fit: cover;" height="160" />
-            </a>
-            <div class="mt-2 text-muted small d-block mb-1">
-                <span>
-                    <i class="fa fa-calendar-alt fa-sm"></i>
-                    {{article.published_at}}
-                </span>
-                <a href="{% url 'article' article.slug %}">
-                    <h6 class="text-dark">{{article.title}}</h6>
+    <section class="recent-posts row">
+        {% for article in articles %}
+        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <article>
+                <a href="{% url 'article' article.slug %}" class="img-fluid">
+                    <img class="rounded w-100" src="{{article.image_url}}" style="object-fit: cover;" height="160" />
                 </a>
-                <p>{{article.description|slice:':100'}} ...</p>
-            </div>
-        </article>
-    </div>
-    <!-- col.// -->
-    {% endfor %}
+                <div class="mt-2 text-muted small d-block mb-1">
+                    <span>
+                        <i class="fa fa-calendar-alt fa-sm"></i>
+                        {{article.published_at}}
+                    </span>
+                    <a href="{% url 'article' article.slug %}">
+                        <h6 class="text-dark">{{article.title}}</h6>
+                    </a>
+                    <p>{{article.description|slice:':100'}} ...</p>
+                </div>
+            </article>
+        </div>
+        <!-- col.// -->
+        {% endfor %}
 
-</section>
+    </section>
+</div>
 </div>
 </div>
 <!-- /.container -->
 <!-- Before Footer
+    <div class="masonrygrid row listrecent"></div>
     ================================================== -->
 <div class="beforefooter">
     <div class="container">
@@ -324,7 +327,7 @@
                             <img src="${device['image']}"
                                 class="device-img" />
                         </div>
-                        <div class="device-info">
+                        <div class="device-details-link">
                             <a href="/devices/${device['brand']}/${device['slug']}" class="device-title">${device['model']}</a>
                         </div>
                     </div>`

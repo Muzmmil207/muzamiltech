@@ -6,9 +6,9 @@ from operator import mul
 import requests
 from PIL import Image
 
-from apps.articles.models import Category
+from apps.articles.models import Article, Category
 from django.conf import settings
-from django.db.models import F
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
@@ -36,9 +36,39 @@ def brands(request):
 
 
 def device_details(request, brand, model):
-    device = Device.objects.filter(slug=model, brand__name=brand).annotate().first()
-    print(device)
-    context = {"device": device}
+    camera = DeviceTypeAttribute.objects.get(name="camera")
+    print(camera.children.all())
+    device = Device.objects.filter(slug=model, brand__name=brand).first()
+    main_attribute_value = (
+        DeviceAttributeValue.objects.filter(device=device)
+        .filter(
+            Q(
+                device_attribute__device_type_attribute__name="display",
+                device_attribute__attribute="resolution_(h_x_w)",
+            )
+            | Q(
+                device_attribute__device_type_attribute__name="processor",
+                device_attribute__attribute="cpu",
+            )
+            | Q(
+                device_attribute__device_type_attribute__name="front_camera",
+                device_attribute__attribute="resolution",
+            )
+            | Q(
+                device_attribute__device_type_attribute__name="software",
+                device_attribute__attribute="os_version",
+            )
+            | Q(
+                device_attribute__device_type_attribute__name="battery",
+                device_attribute__attribute="capacity",
+            )
+        )
+        .values(
+            "device_attribute__device_type_attribute__name", "device_attribute__attribute", "value"
+        )
+    )
+    articles = Article.objects.exclude(image_url=None).order_by("?")[:4]
+    context = {"device": device, "attributes": main_attribute_value, "articles": articles}
     return render(request, "apps/devices/device-details.html", context=context)
 
 
@@ -224,11 +254,9 @@ def update_devices_data(request):
                     del product["date"]
 
                     for key, values in product.items():
-                        device_type_attribute, _ = DeviceTypeAttribute.objects.get_or_create(
-                            name=key
-                        )
-                        device_type_attribute.device_type_attributes.add(device_record.type)
-                        device_type_attribute.save()
+                        type_attribute, _ = DeviceTypeAttribute.objects.get_or_create(name=key)
+                        type_attribute.device_type_attributes.add(device_record.type)
+                        type_attribute.save()
 
                         def device_attributes_data(type_attributes_obj, key, value):
                             device_attribute, _ = DeviceAttribute.objects.get_or_create(
@@ -243,17 +271,17 @@ def update_devices_data(request):
                             value = values[key]
                             if type(value) == dict:
                                 (
-                                    device_type_attribute,
+                                    children_type_attribute,
                                     _,
                                 ) = DeviceTypeAttribute.objects.get_or_create(
-                                    name=key, parent=device_type_attribute
+                                    name=key, parent=type_attribute
                                 )
                                 print(value)
                                 for k, v in value.items():
 
-                                    device_attributes_data(device_type_attribute, k, v)
+                                    device_attributes_data(children_type_attribute, k, v)
                             else:
                                 print("value", value)
-                                device_attributes_data(device_type_attribute, key, value)
+                                device_attributes_data(type_attribute, key, value)
             break
     return render(request, "dashboard/update-devices.html", context)

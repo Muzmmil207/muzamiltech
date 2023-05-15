@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% load static %}
-{% block title %}{{ article.title }}{% endblock %}
+{% load strings_filters %}
+{% block title %} {{device.model}}{% endblock %}
 {% block content %}
 <!-- Home Jumbotron
 ================================================== -->
@@ -76,18 +77,12 @@
 					<div class="row">
 						<table class="table table-bordered">
 							<tbody>
+								{% for attribute in attributes %}
 								<tr>
-									<td>Mark</td>
-									<td>Otto</td>
+									<td>{{attribute.device_attribute__device_type_attribute__name|replace:"_"}}</td>
+									<td>{{attribute.value}}</td>
 								</tr>
-								<tr>
-									<td>Jacob</td>
-									<td>Thornton</td>
-								</tr>
-								<tr>
-									<th scope="row">3</th>
-									<td>@twitter</td>
-								</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -137,14 +132,15 @@
 						<div class="device-info">
 							{% if type_attribute.children.all %}
 							{% for type_attribute_children in type_attribute.children.all %}
-							<div class="device-type-attribute">{{type_attribute.name}} ({{type_attribute_children}})
+							<div class="device-type-attribute">
+								{{type_attribute.name}} ({{type_attribute_children.name|replace:"_"}})
 							</div>
 							<div>
 								<table class="table table-striped table-hover">
 									<tbody>
 										{% for device_attribute in type_attribute_children.device_attributes.all %}
 										<tr>
-											<td>{{device_attribute.attribute}}</td>
+											<td>{{device_attribute.attribute|replace:"_"}}</td>
 											<td>{{device_attribute.device_Attributes.first.value}}</td>
 										</tr>
 										{% endfor %}
@@ -160,7 +156,7 @@
 										<tbody>
 											{% for device_attribute in type_attribute.device_attributes.all %}
 											<tr>
-												<td>{{device_attribute.attribute}}</td>
+												<td>{{device_attribute.attribute|replace:"_"}}</td>
 												<td>{{device_attribute.device_Attributes.first.value}}</td>
 											</tr>
 											{% endfor %}
@@ -170,6 +166,7 @@
 							</div>
 							{% endif %}
 						</div>
+						<hr>
 						{% endfor %}
 					</div>
 					<!-- Pills content -->
@@ -201,6 +198,32 @@
 		</div>
 	</div>
 </section>
-<!-- Footer -->
+<div class="container">
+	<div class="section-title">
+		<h2><span>Last Articles</span></h2>
+	</div>
+	<section class="recent-posts row">
+		{% for article in articles %}
+		<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+			<article>
+				<a href="{% url 'article' article.slug %}" class="img-fluid">
+					<img class="rounded w-100" src="{{article.image_url}}" style="object-fit: cover;" height="160" />
+				</a>
+				<div class="mt-2 text-muted small d-block mb-1">
+					<span>
+						<i class="fa fa-calendar-alt fa-sm"></i>
+						{{article.published_at}}
+					</span>
+					<a href="{% url 'article' article.slug %}">
+						<h6 class="text-dark">{{article.title}}</h6>
+					</a>
+					<p>{{article.description|slice:':100'}} ...</p>
+				</div>
+			</article>
+		</div>
+		<!-- col.// -->
+		{% endfor %}
 
+	</section>
+</div>
 {% endblock %}

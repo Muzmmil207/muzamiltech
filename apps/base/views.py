@@ -13,7 +13,7 @@ from .models import Contact, NewsletterSubscriber
 
 
 def home(request):
-    articles = Article.objects.exclude(image_url=None).order_by("?")[:4]
+    articles = Article.objects.exclude(image_url=None)[:8]  # .order_by("?")[:8]
     brands = Brand.objects.all()
     devices = Device.objects.all()
     context = {"articles": articles, "brands": brands, "devices": devices}

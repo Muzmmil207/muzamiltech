@@ -2,15 +2,15 @@ import dj_database_url
 
 from .base import *
 
-if DEBUG:
+if not DEBUG:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
-    # DATABASES = {
-    #     "default": dj_database_url.config(
-    #         default="postgresql://postgres:postgres@localhost:5432/config",
-    #         conn_max_age=6000,
-    #     )
-    # }
+    DATABASES = {
+        "default": dj_database_url.config(
+            default="postgresql://postgres:postgres@localhost:5432/config",
+            conn_max_age=6000,
+        )
+    }
 
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 

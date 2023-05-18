@@ -219,11 +219,11 @@ def update_devices_data(request):
                 )
             except Exception as e:
                 context["exception"] = e
-            with open("files/token.json") as data:
-                data = json.loads(data.read())
-                print(data["status"])
-            # data = response.json()
-            # data = data.get("data", {})
+            # with open("files/token.json") as data:
+            #     data = json.loads(data.read())
+            #     print(data["status"])
+            data = response.json()
+            data = data.get("data", {})
             products = data["data"]["items"]
             if products:
                 for product in products:

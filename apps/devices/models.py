@@ -123,6 +123,20 @@ class Device(AbstractModel):
         """Return an image url"""
         return self.media_set.filter(is_feature=True).first().image
 
+    @property
+    def description(self):
+        """A brief description"""
+        os = self.devices.filter(device_attribute__attribute="os").first()
+        if os:
+            os = os.value
+        diagonal = self.devices.filter(device_attribute__attribute="diagonal").first()
+        if diagonal:
+            diagonal = diagonal.value
+        capacity = self.devices.filter(device_attribute__attribute="capacity").first()
+        if capacity:
+            capacity = capacity.value
+        return f"{os or ''} - {diagonal or ''} - {capacity or ''}"
+
     def source(self, src: str = "https://api.device-specs.io/api"):
         """Return the first device source object
         that match the src query

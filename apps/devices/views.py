@@ -8,6 +8,7 @@ from PIL import Image
 
 from apps.articles.models import Article, Category
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -37,7 +38,6 @@ def brands(request):
 
 def device_details(request, brand, model):
     camera = DeviceTypeAttribute.objects.get(name="camera")
-    print(camera.children.all())
     device = Device.objects.filter(slug=model, brand__name=brand).first()
     main_attribute_value = (
         DeviceAttributeValue.objects.filter(device=device)
@@ -79,7 +79,19 @@ def devices_by_brand(request, brand):
 
 
 def search_devices(request):
-    context = {}
+    search_query = request.GET.get("search", "")
+    devices = Device.objects.exclude(status="new inserted").filter(
+        Q(model__icontains=search_query)
+        | Q(brand__name=search_query)
+        | Q(type__name=search_query)
+        | Q(category__name=search_query)
+    )
+
+    page = request.GET.get("page")
+    paginator = Paginator(devices, per_page=5)
+    pages = paginator.get_page(page)
+
+    context = {"devices": devices, "pages": pages}
     return render(request, "apps/devices/search-devices.html", context=context)
 
 
@@ -171,7 +183,7 @@ def update_devices_data(request):
         device_obj.announced = datetime.strptime(dic["date"]["announced"], "%Y %b %d")
         device_obj.status = "updated once"
         device_obj.save()
-        print(device_obj.status)
+
         for img in dic["image"]:
             if dic["image"][img]:
                 Media.objects.get_or_create(
@@ -236,7 +248,7 @@ def update_devices_data(request):
                         context["new_devices"] += is_created
                         id = product["product"]["id"]
                         if is_created:
-                            DeviceSource.objects.create(
+                            DeviceSource.objects.get_or_create(
                                 device=device,
                                 web_id=product["product"]["id"],
                                 source=f"https://api.techspecs.io/v4/product/detail?productId={id}",
@@ -276,12 +288,10 @@ def update_devices_data(request):
                                 ) = DeviceTypeAttribute.objects.get_or_create(
                                     name=key, parent=type_attribute
                                 )
-                                print(value)
                                 for k, v in value.items():
 
                                     device_attributes_data(children_type_attribute, k, v)
                             else:
-                                print("value", value)
                                 device_attributes_data(type_attribute, key, value)
             break
     return render(request, "dashboard/update-devices.html", context)

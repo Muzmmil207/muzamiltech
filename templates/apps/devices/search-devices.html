@@ -2,14 +2,270 @@
 {% load static %}
 {% block title %}{{ article.title }}{% endblock %}
 {% block content %}
-<div class="container">
-    <!-- Content
-    ================================================== -->
-    <div class="main-content">
-        <h1 style="color: yellow;">
-            <center>Soon</center>
-        </h1>
+<!-- sidebar + content -->
+<section class="">
+    <div class="container">
+        <div class="row">
+
+            <!-- sidebar -->
+            <div class="col-lg-3">
+                {% comment "Optional note" %}
+
+                <!-- Toggle button -->
+                <button class="btn btn-outline-secondary mb-3 w-100 d-lg-none" type="button" data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span>Show filter</span>
+                </button>
+                <!-- Collapsible wrapper -->
+                <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header text-center  bg-primary" id="headingTwo">
+                                <span class="accordion-button text-white">
+                                    Brands
+                                </span>
+                            </h2>
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
+                                aria-labelledby="headingTwo">
+                                <div class="accordion-body">
+                                    <div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked1" checked />
+                                            <label class="form-check-label" for="flexCheckChecked1">Mercedes</label>
+                                            <span class="badge badge-secondary float-end">120</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked2" checked />
+                                            <label class="form-check-label" for="flexCheckChecked2">Toyota</label>
+                                            <span class="badge badge-secondary float-end">15</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked3" checked />
+                                            <label class="form-check-label" for="flexCheckChecked3">Mitsubishi</label>
+                                            <span class="badge badge-secondary float-end">35</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked4" checked />
+                                            <label class="form-check-label" for="flexCheckChecked4">Nissan</label>
+                                            <span class="badge badge-secondary float-end">89</span>
+                                        </div>
+                                        <!-- Default checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">Honda</label>
+                                            <span class="badge badge-secondary float-end">30</span>
+                                        </div>
+                                        <!-- Default checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">Suzuki</label>
+                                            <span class="badge badge-secondary float-end">30</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header text-center  bg-primary" id="headingTwo">
+                                <span class="accordion-button text-white">
+                                    Brands
+                                </span>
+                            </h2>
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
+                                aria-labelledby="headingTwo">
+                                <div class="accordion-body">
+                                    <div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked1" checked />
+                                            <label class="form-check-label" for="flexCheckChecked1">Mercedes</label>
+                                            <span class="badge badge-secondary float-end">120</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked2" checked />
+                                            <label class="form-check-label" for="flexCheckChecked2">Toyota</label>
+                                            <span class="badge badge-secondary float-end">15</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked3" checked />
+                                            <label class="form-check-label" for="flexCheckChecked3">Mitsubishi</label>
+                                            <span class="badge badge-secondary float-end">35</span>
+                                        </div>
+                                        <!-- Checked checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckChecked4" checked />
+                                            <label class="form-check-label" for="flexCheckChecked4">Nissan</label>
+                                            <span class="badge badge-secondary float-end">89</span>
+                                        </div>
+                                        <!-- Default checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">Honda</label>
+                                            <span class="badge badge-secondary float-end">30</span>
+                                        </div>
+                                        <!-- Default checkbox -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">Suzuki</label>
+                                            <span class="badge badge-secondary float-end">30</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endcomment %}
+            </div>
+            <!-- sidebar -->
+            <!-- content -->
+            <div class="col-lg-9">
+                <div class="col-12 pb-1">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <form method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" placeholder="Search by name">
+                                <button class="btn btn-success text-white">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        {% comment "Optional note" %}
+                        <div class="dropdown ml-4">
+                            <button class="btn  btn-success dropdown-toggle" type="button" id="triggerId"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Sort by
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                <a class="dropdown-item" href="#">Latest</a>
+                            </div>
+                        </div>
+                        {% endcomment %}
+                    </div>
+                </div>
+                <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+                    <strong class="d-block py-2">{{devices.count}} Items found </strong>
+                    <!-- <div class="ms-auto">
+                        <select class="form-select d-inline-block w-auto border pt-1">
+                            <option value="0">Best match</option>
+                            <option value="1">Recommended</option>
+                            <option value="2">High rated</option>
+                            <option value="3">Randomly</option>
+                        </select>
+                        <div class="btn-group shadow-0 border">
+                            <a href="#" class="btn btn-light" title="List view">
+                                <i class="fa fa-bars fa-lg"></i>
+                            </a>
+                            <a href="#" class="btn btn-light active" title="Grid view">
+                                <i class="fa fa-th fa-lg"></i>
+                            </a>
+                        </div>
+                    </div> -->
+                </header>
+                {% for device in pages %}
+                <div class="row justify-content-center mb-3">
+                    <div class="col-md-12">
+                        <div class="card shadow-0 border rounded-3">
+                            <div class="card-body">
+                                <div class="row g-0">
+                                    <div class="col-xl-3 col-md-4 d-flex justify-content-center">
+                                        <div
+                                            class="bg-image hover-zoom ripple rounded ripple-surface me-md-3 mb-3 mb-md-0">
+                                            <img src="{{device.image}}" class="w-100" />
+                                            <a href="{% url 'device-details' device.brand device.slug %}">
+                                                <div class="hover-overlay">
+                                                    <div class="mask"
+                                                        style="background-color: rgba(253, 253, 253, 0.15);">
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-md-5 col-sm-7">
+                                        <h5>{{device.model}}</h5>
+                                    </div>
+
+                                    <p class="text mb-4 mb-md-0">
+                                        {{device.description}}
+                                    </p>
+                                </div>
+                                <div class="col-xl-3 col-md-3 col-sm-5">
+                                    <div class="mt-4">
+                                        <button class="btn btn-primary shadow-0" type="button">more details</button>
+                                        <a href="{% url 'device-details' device.brand device.slug %}"
+                                            class="btn btn-primary border px-2 pt-2 icon-hover">
+                                            <i class="fa fa-link"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+            <hr />
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+                <ul class="pagination" style="display: contents;">
+                    {% if pages.has_previous %}
+                    <li class="page-item ">
+                        <a class="page-link"
+                            href="{% url 'search-devices' %}??search={{request.GET.search}}&page={{pages.previous_page_number}}"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item disabled"><a class="page-link" href="#">{{pages}}</a></li>
+                    {% if pages.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{% url 'search-devices' %}??search={{request.GET.search}}&page={{pages.next_page_number}}"
+                            aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- Pagination -->
+        </div>
     </div>
-</div>
-<!-- /.container -->
+    </div>
+</section>
+<style>
+    .icon-hover:hover {
+        border-color: #3b71ca !important;
+        background-color: white !important;
+    }
+
+    .icon-hover:hover i {
+        color: #3b71ca !important;
+    }
+</style>
 {% endblock %}

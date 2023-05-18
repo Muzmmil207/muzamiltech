@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% load static %}
-{% load strings_filters %}
+{% load filters %}
 {% block title %} {{device.model}}{% endblock %}
 {% block content %}
 <!-- Home Jumbotron
@@ -58,19 +58,8 @@
 						{{device.model}}
 					</h4>
 					<div class="d-flex flex-row my-3">
-						<div class="text-warning mb-1 me-2">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fas fa-star-half-alt"></i>
-							<span class="ms-1">
-								4.5
-							</span>
-						</div>
-						<span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154
-							orders</span>
-						<span class="text-success ms-2">In stock</span>
+
+						<strong class="text-dark">version | {{device.version}}</strong>
 					</div>
 
 
@@ -141,7 +130,8 @@
 										{% for device_attribute in type_attribute_children.device_attributes.all %}
 										<tr>
 											<td>{{device_attribute.attribute|replace:"_"}}</td>
-											<td>{{device_attribute.device_Attributes.first.value}}</td>
+											<td>{{device_attribute|value_filter:device}}
+											</td>
 										</tr>
 										{% endfor %}
 									</tbody>
@@ -157,7 +147,7 @@
 											{% for device_attribute in type_attribute.device_attributes.all %}
 											<tr>
 												<td>{{device_attribute.attribute|replace:"_"}}</td>
-												<td>{{device_attribute.device_Attributes.first.value}}</td>
+												<td>{{device_attribute|value_filter:device}}
 											</tr>
 											{% endfor %}
 										</tbody>

@@ -65,8 +65,6 @@ class DevicesList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Device.objects.exclude(status="new inserted").order_by("?")
-        for q in queryset:
-            print(q.children.count())
         # queryset = ( children
         #     Device.objects.exclude(status="new inserted")
         #     .annotate(num_of_children=Count(F("pa")))

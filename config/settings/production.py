@@ -1,14 +1,12 @@
-import dj_database_url
-
 from .base import *
 
-if DEBUG:
+if not DEBUG:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
     DATABASES = {
         "default": dj_database_url.config(
-            default="postgresql://postgres:postgres@localhost:5432/config",
-            conn_max_age=6000,
+            default="postgres://muzamil:tS3wrVF7crOQtzfbIOsqnmhXyENqkFTa@dpg-chkehn64dadfmsk7eheg-a.oregon-postgres.render.com/config_mg71_pybs",
+            conn_max_age=60,
         )
     }
 

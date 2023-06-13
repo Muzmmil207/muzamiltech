@@ -11,14 +11,14 @@ class ContactForm(forms.ModelForm):
             "message": forms.Textarea(attrs={"rows": 5}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["name"].widget.attrs.update({"placeholder": "Your name"})
-        self.fields["email"].widget.attrs.update({"placeholder": "Your email address"})
-        self.fields["message"].widget.attrs.update({"placeholder": "Message"})
-
     def clean_email(self):
         email = self.cleaned_data["email"]
         if "@example.com" in email:
             raise forms.ValidationError("We don't accept emails from example.com")
         return email
+
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        if "@example.com" in name:
+            raise forms.ValidationError("We don't accept names from example.com")
+        return name

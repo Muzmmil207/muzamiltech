@@ -1,3 +1,6 @@
+let contactForm = document.getElementById('contact-form')
+contactForm.addEventListener('submit', contactFormSubmitHandler)
+
 function contactFormSubmitHandler(e) {
 
     e.preventDefault()
@@ -16,11 +19,10 @@ function contactFormSubmitHandler(e) {
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data)
             let div = contactForm.parentNode
             div.removeChild(contactForm)
             var thanksMessage = document.createElement('p')
-            thanksMessage.innerText = data
+            thanksMessage.innerHTML = data
             div.appendChild(thanksMessage)
         })
 }

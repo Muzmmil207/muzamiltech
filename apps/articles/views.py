@@ -12,9 +12,6 @@ def articles(request):
 
 def article(request, slug):
     article = get_object_or_404(Article, slug=slug)
-    con = article.content
-    article.content = "".join([f"<p>{i}</p>" for i in con.split(". ")])
-    article.save()
     article_id = article.id
     next_prev_articles = Article.objects.filter(id__in=[article_id + 1, article_id - 1]).values(
         "title", "slug"

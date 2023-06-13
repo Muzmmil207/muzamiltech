@@ -103,10 +103,8 @@ def insert_devices_data(request):
     }
 
     if request.method == "POST":
-        from_date = datetime.strptime(request.POST.get("day"), "%Y-%m-%d")
-        to_date = datetime.strptime(request.POST.get("to_day"), "%Y-%m-%d")
-        day = "{0:%Y-%m-%d}".format(from_date)
-        to_day = "{0:%Y-%m-%d}".format(to_date)
+        day = "{0:%Y-%m-%d}".format(datetime.strptime(request.POST.get("day"), "%Y-%m-%d"))
+        to_day = "{0:%Y-%m-%d}".format(datetime.strptime(request.POST.get("to_day"), "%Y-%m-%d"))
 
         category = request.POST.get("category")
         device_type = DeviceType.objects.get(id=request.POST.get("type", 1))

@@ -2,6 +2,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from utils import validators
+
 
 class NewsletterSubscriber(models.Model):
     class Meta:
@@ -18,12 +20,8 @@ class Contact(models.Model):
     class Meta:
         db_table = "contacts"
 
-    name = models.CharField(max_length=255)
-    email_regex = RegexValidator(
-        regex=r"^[A-z0-9\.]+@[A-z0-9]+\.(com|net|org|info)$",
-        message=_("Email must be entered in the format: `abc@abc.com`."),
-    )
-    email = models.EmailField(_("email address"), validators=[email_regex])
+    name = models.CharField(max_length=255, validators=[validators.name_regex])
+    email = models.EmailField(_("email address"), validators=[validators.email_regex])
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

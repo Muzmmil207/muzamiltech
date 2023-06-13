@@ -1,5 +1,5 @@
-from django.contrib.sitemaps import Sitemap
 from apps.articles.models import Article
+from django.contrib.sitemaps import Sitemap
 
 
 class ArticleSitemap(Sitemap):
@@ -14,4 +14,4 @@ class ArticleSitemap(Sitemap):
         return obj.published_at
 
     def location(self, obj):
-        return "/articles/%s" % (obj.slug)
+        return "/articles/%s/" % (obj.slug)

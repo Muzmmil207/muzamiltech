@@ -3,17 +3,19 @@ import json
 import requests
 
 from apps.articles.models import Article
+from apps.base.forms import ContactForm
 from apps.devices.models import Brand, Device
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from .models import Contact, NewsletterSubscriber
 
 
 def home(request):
-    articles = Article.objects.exclude(image_url=None)[:8]  # .order_by("?")[:8]
+    articles = Article.objects.exclude(image_url=None)[:6]  # .order_by("?")[:8]
     brands = Brand.objects.all()
     devices = Device.objects.all()
     context = {"articles": articles, "brands": brands, "devices": devices}
@@ -31,17 +33,18 @@ def contact(request):
 @require_http_methods(["POST"])
 def contact_handler(request):
     data = json.loads(request.body)
-    try:
-        contact = Contact.objects.create(
-            name=data["name"],
-            email=data["email"],
-            message=data["message"],
-        )
-        contact.save()
+    contact_data = ContactForm(data=data)
+
+    if contact_data.is_valid():
+        contact_data.save()
         return JsonResponse("Thanks for reaching out! we'll be in touch soon.", safe=False)
-    except Exception as e:
-        print(e)
-        return JsonResponse("Some thing want wrong :(", safe=False)
+    return JsonResponse(
+        "{1} <br> <a href='{0}'>try again</a>.".format(
+            reverse("contact"),
+            contact_data.errors,
+        ),
+        safe=False,
+    )
 
 
 @require_http_methods(["POST"])

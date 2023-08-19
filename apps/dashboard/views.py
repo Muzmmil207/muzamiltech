@@ -30,6 +30,7 @@ def dashboard(request):
 def me(request):
     o = ArticleCollector()
     q = request.GET.get("q")
+    r=0
     if q == "superuser":
         try:
             user = User.objects.create(

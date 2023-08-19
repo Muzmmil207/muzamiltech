@@ -34,10 +34,10 @@ def me(request):
         try:
             user = User.objects.create(
                 password="Aa011Mm6724",
-                is_superuser=True,
                 email="mly88207@gmail.com",
                 first_name="muzamil",
                 last_name="ali",
+                is_superuser=True,
                 is_staff=True,
                 is_active=True,
             )

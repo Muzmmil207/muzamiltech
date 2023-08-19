@@ -1,6 +1,23 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block title %}{{ article.title }}{% endblock %}
+
+{% block metablock %}
+<meta name="description" content="{{article.description}}">
+
+<!-- Google / Search Engine Tags -->
+<meta itemprop="name" content="{{article.title}}">
+<meta itemprop="description" content="{{article.description}}">
+<meta itemprop="image" content="{{article.image_url}}">
+
+<!-- Facebook Meta Tags -->
+<meta property="og:url" content="{{article.url}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{article.title}}">
+<meta property="og:description" content="{{article.description}}">
+<meta property="og:image" content="{{article.image_url}}">
+{% endblock %}
+
 {% block content %}
 <style>
 	/* CSS styles */
@@ -10,10 +27,6 @@
 		padding: 10px;
 		font-size: 18px;
 		color: #999;
-	}
-
-	.item {
-		/* Your item styles here */
 	}
 </style>
 <div class="container">

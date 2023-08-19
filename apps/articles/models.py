@@ -3,6 +3,7 @@ from django.db.models import F
 from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+from utils.functional import get_url
 from utils.models.models_fields import AbstractModel
 
 
@@ -82,6 +83,11 @@ class Article(AbstractModel):
             self.trending = F("trending") + 1
             self.save()
             request.session["ids"].append(self.id)
+
+    @property
+    def url(self):
+
+        return get_url() + "/articles/" + self.slug
 
 
 class ArticleMeta(models.Model):

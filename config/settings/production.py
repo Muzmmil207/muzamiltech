@@ -1,6 +1,6 @@
 from .base import *
 
-if  DEBUG:
+if DEBUG:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
     DATABASES = {

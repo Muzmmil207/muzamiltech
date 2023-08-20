@@ -26,35 +26,34 @@ class ArticleCollector(DataCollector):
         data = response.json()
         articles = data["results"]
         for article in articles:
-            if article.get("image_url") != None:
-                try:
-                    article_obj = self.model(
-                        title=article.get("title", ""),
-                        meta_title=article.get("title", ""),
-                        slug=slugify(article.get("title", "")),
-                        description=article.get("description", "").replace("/PRNewswire/ --", ""),
-                        content=article.get("content", "").replace("/PRNewswire/ --", ""),
-                        video_url=article.get("video_url"),
-                        image_url=article.get("image_url"),
-                        country=", ".join(article.get("country", "")),
-                        language=article.get("language", ""),
-                        published_at=article.get("pubDate"),
+            try:
+                article_obj = self.model(
+                    title=article.get("title", ""),
+                    meta_title=article.get("title", ""),
+                    slug=slugify(article.get("title", "")),
+                    description=article.get("description", "").replace("/PRNewswire/ --", ""),
+                    content=article.get("content", "").replace("/PRNewswire/ --", ""),
+                    video_url=article.get("video_url"),
+                    image_url=article.get("image_url"),
+                    country=", ".join(article.get("country", "")),
+                    language=article.get("language", ""),
+                    published_at=article.get("pubDate"),
+                )
+                categories = article.get("category", "")
+                for category in categories:
+                    cate = Category.objects.get_or_create(
+                        name=category,
+                        slug=slugify(category),
                     )
-                    categories = article.get("category", "")
-                    for category in categories:
-                        cate = Category.objects.get_or_create(
-                            name=category,
-                            slug=slugify(category),
-                        )
-                        article_obj.save()
-                        article_obj.category.add(cate[0])
-                        article_obj.content = "".join(
-                            [f"<p>{i}.</p>" for i in article_obj.content.split(". ")]
-                        )
-                        article_obj.save()
-                    count += 1
-                except Exception as e:
-                    pass
+                    article_obj.save()
+                    article_obj.category.add(cate[0])
+                    article_obj.content = "".join(
+                        [f"<p>{i}.</p>" for i in article_obj.content.split(". ")]
+                    )
+                    article_obj.save()
+                count += 1
+            except Exception as e:
+                pass
         return count
 
 

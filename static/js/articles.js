@@ -68,7 +68,7 @@ function loadArticles(url) {
       var element = `<div class="col-md-3 grid-item">
           <div class="card">
             <a href="${article.slug}">
-            <img class="img-fluid" src="${article.image_url}" max-height="390px" alt="Tree of Codes">
+            <img class="img-fluid" src="${article.image_url}s" max-height="390px" alt="Tree of Codes">
             </a>
             <div class="card-block">
                 <h2 class="card-title"><a href="${article.slug}">${article.title}</a>

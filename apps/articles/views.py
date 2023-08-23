@@ -17,6 +17,7 @@ def article(request, slug):
         "title", "slug"
     )
     url = get_url(request)
+
     context = {
         "article": article,
         "next_prev_articles": next_prev_articles,

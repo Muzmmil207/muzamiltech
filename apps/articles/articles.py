@@ -11,19 +11,20 @@ class ArticleCollector(DataCollector):
     model = Article
     URLs = {"newsdata": f"https://newsdata.io/api/1/news?apikey={settings.NEWSDATA_API_KEY}"}
 
-    def newsdata(self, query):
+    def newsdata(self, query) -> int:
         count = 0
         url = self.URLs.get("newsdata")
         to_date, from_date = self.get_time(from_date=1)
         payload = {
             "q": query,
-            "from_date": from_date,
-            "to_date": to_date,
-            "category": "technology",
+            "timeframe": 24,
+            # "category": "technology",
             "language": "en",
+            "image": 1,
         }
         response = requests.get(url, params=payload)
         data = response.json()
+
         articles = data["results"]
         for article in articles:
             try:
@@ -39,17 +40,17 @@ class ArticleCollector(DataCollector):
                     language=article.get("language", ""),
                     published_at=article.get("pubDate"),
                 )
-                categories = article.get("category", "")
+                categories = article.get("category", [])
+                article_obj.content = "".join(
+                    [f"<p>{i}.</p>" for i in article_obj.content.split(". ")]
+                )
+                article_obj.save()
                 for category in categories:
                     cate = Category.objects.get_or_create(
                         name=category,
                         slug=slugify(category),
                     )
-                    article_obj.save()
                     article_obj.category.add(cate[0])
-                    article_obj.content = "".join(
-                        [f"<p>{i}.</p>" for i in article_obj.content.split(". ")]
-                    )
                     article_obj.save()
                 count += 1
             except Exception as e:

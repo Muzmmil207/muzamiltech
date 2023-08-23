@@ -49,7 +49,7 @@ def me(request):
         user.save()
     elif q:
         r = o.newsdata(q)
-    ping_google("/sitemaps.xml")
+    # ping_google("/sitemaps.xml")
     return HttpResponse(f"{r}")
 
 
